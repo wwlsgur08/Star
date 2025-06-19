@@ -354,6 +354,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         const targetElement = step.element;
+        const isMobile = window.innerWidth <= 768;
+
+        // [수정] 모바일일 경우, 해당 요소가 보이도록 화면을 스크롤
+        if (isMobile) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
         const rect = targetElement.getBoundingClientRect();
         
         const padding = 10;
@@ -364,18 +371,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         onboardingElements.tooltipText.innerHTML = step.text;
         
-        // [수정] 모바일/데스크탑 뷰에 따라 툴팁 위치를 다르게 계산
-        const isMobile = window.innerWidth <= 768;
-
         if (isMobile) {
-            // 모바일에서는 툴팁을 화면 하단에 고정
-            onboardingElements.tooltip.style.top = ''; // 기존 top 속성 제거
+            onboardingElements.tooltip.style.top = ''; 
             onboardingElements.tooltip.style.bottom = '20px';
-            // left, transform 속성은 CSS에서 !important로 강제하므로 JS에서 설정 불필요
         } else {
-            // 데스크탑에서는 기존 로직 사용
-            onboardingElements.tooltip.style.bottom = ''; // 모바일용 bottom 속성 제거
-            onboardingElements.tooltip.style.transform = ''; // 모바일용 transform 제거
+            onboardingElements.tooltip.style.bottom = '';
+            onboardingElements.tooltip.style.transform = '';
 
             const tooltipRect = onboardingElements.tooltip.getBoundingClientRect();
             let top, left;
@@ -409,7 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
             onboardingElements.tooltip.style.left = `${left}px`;
         }
 
-
         if (stepIndex === onboardingSteps.length - 1) {
             onboardingElements.nextBtn.textContent = '시작하기';
         } else {
@@ -420,12 +420,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function startOnboarding() {
         onboardingElements.overlay.style.display = 'block';
         currentOnboardingStep = 0;
-        // 렌더링 후 위치 계산을 위해 약간의 지연시간을 줌
         setTimeout(() => showOnboardingStep(currentOnboardingStep), 50);
     }
 
     function endOnboarding() {
         onboardingElements.overlay.style.display = 'none';
+        // [수정] 온보딩이 끝나면 페이지 최상단으로 스크롤
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // --- 애플리케이션 시작 ---
