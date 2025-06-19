@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aster: 1단계 - 매력 선택</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        header p {
+            font-size: 14px;
+            color: #666;
+        }
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .category-group {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .category-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #333;
+            display: inline-block;
+        }
+        .charm-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .selectable-charm {
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .selectable-charm.selected {
+            background-color: #4c51bf;
+            color: white;
+            border-color: #4c51bf;
+            font-weight: 600;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e5e5;
+        }
+        #completeBtn {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #completeBtn:hover {
+            background-color: #218838;
+        }
+        #completeBtn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>1단계: 나의 매력 모두 선택하기</h1>
+            <p>지난 여정을 통해 발견한 당신의 매력을 모두 선택해주세요. (개수 제한 없음)</p>
+        </header>
+
+        <main>
+            <div id="selectionGrid" class="selection-grid">
+                <!-- 자바스크립트로 매력 목록이 채워질 영역 -->
+            </div>
+        </main>
+
+        <footer class="footer">
+            <button id="completeBtn" disabled>선택 완료하고 점수 배분하러 가기</button>
+        </footer>
+    </div>
+    <script src="js/select.js"></script>
+</body>
+</html>

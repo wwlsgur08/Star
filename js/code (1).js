@@ -52,96 +52,118 @@ document.addEventListener('DOMContentLoaded', () => {
     const replayOnboardingBtn = document.getElementById('replayOnboardingBtn');
     
     function init() {
-        createControlPanel();
-        createStars();
-        addEventListeners();
-        setupOnboarding();
-        setupDragScroll();
-        updateDisplay();
-        updateUndoButtonState();
-        
+    // 1단계에서 선택한 매력 데이터 가져오기
+    const savedCharmsJSON = localStorage.getItem('userSelectedCharms');
+
+    // 데이터가 없으면, 1단계로 가라는 안내창 보여주고 실행 중단
+    if (!savedCharmsJSON) {
+        document.getElementById('redirect-overlay').style.display = 'flex';
+        return;
+    }
+
+    // 데이터가 있으면, 화면 그리기 시작
+    const selectedCharmNames = JSON.parse(savedCharmsJSON);
+    
+    createControlPanel(selectedCharmNames); // 선택된 매력만 그리도록 인자 전달
+    createStars(selectedCharmNames);      // 선택된 별만 그리도록 인자 전달
+    
+    addEventListeners();
+    setupOnboarding();
+    setupDragScroll();
+    updateDisplay();
+    updateUndoButtonState();
+    
+    if (selectedCharmNames.length > 0) {
         startOnboarding();
     }
+}
 
-    function createControlPanel() {
-        categoryDataForPanel.forEach((category) => {
-            const categoryGroup = document.createElement('div');
-            categoryGroup.className = 'category-group';
-            const categoryTitle = document.createElement('h3');
-            categoryTitle.className = 'category-title';
-            categoryTitle.textContent = category.name;
-            categoryTitle.style.borderColor = categoryInfo[category.name].color;
-            categoryGroup.appendChild(categoryTitle);
-            const itemsWrapper = document.createElement('div');
-            itemsWrapper.className = 'charm-items-wrapper';
-            category.charms.forEach(charmName => {
-                const charmItem = document.createElement('div');
-                charmItem.className = 'charm-item';
-                const nameEl = document.createElement('span');
-                nameEl.className = 'charm-name';
-                nameEl.textContent = charmName;
-                const buttonsEl = document.createElement('div');
-                buttonsEl.className = 'level-buttons';
-                for (let level = 0; level <= 6; level++) {
-                    const btn = document.createElement('button');
-                    btn.className = 'level-btn';
-                    btn.textContent = level;
-                    btn.dataset.level = level;
-                    btn.addEventListener('click', () => handleLevelButtonClick(charmName, level));
-                    buttonsEl.appendChild(btn);
-                }
-                charmItem.appendChild(nameEl);
-                charmItem.appendChild(buttonsEl);
-                itemsWrapper.appendChild(charmItem);
-            });
-            categoryGroup.appendChild(itemsWrapper);
-            charmListContainer.appendChild(categoryGroup);
-        });
-    }
+    function createControlPanel(selectedCharmNames) {
+    categoryDataForPanel.forEach((category) => {
+        const charmsInThisCategory = category.charms.filter(charm => selectedCharmNames.includes(charm));
 
-    function createStars() {
-        const gridSize = 7;
-        const padding = 8;
+        if (charmsInThisCategory.length === 0) return;
+
+        const categoryGroup = document.createElement('div');
+        // ... (이하 로직은 기존과 거의 동일하나, charmsInThisCategory를 사용)
+        categoryGroup.className = 'category-group';
+        const categoryTitle = document.createElement('h3');
+        categoryTitle.className = 'category-title';
+        categoryTitle.textContent = category.name;
+        categoryTitle.style.borderColor = categoryInfo[category.name].color;
+        categoryGroup.appendChild(categoryTitle);
         
-        shuffledCharmLayout.forEach((charm, index) => {
-            const charmName = charm.name;
-            const charmCategory = charm.category;
-            const info = categoryInfo[charmCategory];
-
-            const row = Math.floor(index / gridSize);
-            const col = index % gridSize;
-            
-            let gridX = padding + (col * (100 - padding * 2) / (gridSize - 1));
-            let gridY = padding + (row * (100 - padding * 2) / (gridSize - 1));
-
-            const randomJitter = 4;
-            const offsetX = gridX + (Math.random() - 0.5) * randomJitter;
-            const offsetY = gridY + (Math.random() - 0.5) * randomJitter;
-            
-            const starEl = document.createElement('div');
-            starEl.className = 'star';
-            starEl.style.left = `${offsetX}%`;
-            starEl.style.top = `${offsetY}%`;
-            starEl.style.backgroundImage = `url("images/${info.starImage}")`;
-
-            const clickableArea = document.createElement('div');
-            clickableArea.className = 'star-clickable-area';
-            clickableArea.addEventListener('click', () => handleStarClick(charmName));
-
-            starEl.appendChild(clickableArea);
-            starField.appendChild(starEl);
-
-            state.charms[charmName] = {
-                name: charmName,
-                level: 0,
-                category: charmCategory,
-                color: info.color, 
-                element: starEl, 
-                clickableElement: clickableArea,
-                position: { x: offsetX, y: offsetY }
-            };
+        const itemsWrapper = document.createElement('div');
+        itemsWrapper.className = 'charm-items-wrapper';
+        
+        charmsInThisCategory.forEach(charmName => {
+            const charmItem = document.createElement('div');
+            charmItem.className = 'charm-item';
+            const nameEl = document.createElement('span');
+            nameEl.className = 'charm-name';
+            nameEl.textContent = charmName;
+            const buttonsEl = document.createElement('div');
+            buttonsEl.className = 'level-buttons';
+            for (let level = 0; level <= 6; level++) {
+                const btn = document.createElement('button');
+                btn.className = 'level-btn';
+                btn.textContent = level;
+                btn.dataset.level = level;
+                btn.addEventListener('click', () => handleLevelButtonClick(charmName, level));
+                buttonsEl.appendChild(btn);
+            }
+            charmItem.appendChild(nameEl);
+            charmItem.appendChild(buttonsEl);
+            itemsWrapper.appendChild(charmItem);
         });
-    }
+        categoryGroup.appendChild(itemsWrapper);
+        charmListContainer.appendChild(categoryGroup);
+    });
+}
+
+    function createStars(selectedCharmNames) {
+    shuffledCharmLayout.forEach((charm, index) => {
+        if (!selectedCharmNames.includes(charm.name)) return;
+        
+        // ... (이하 별 생성 로직은 기존과 동일)
+        const charmName = charm.name;
+        const charmCategory = charm.category;
+        const info = categoryInfo[charmCategory];
+
+        const row = Math.floor(index / 7);
+        const col = index % 7;
+        
+        let gridX = 8 + (col * (100 - 8 * 2) / (7 - 1));
+        let gridY = 8 + (row * (100 - 8 * 2) / (7 - 1));
+
+        const randomJitter = 4;
+        const offsetX = gridX + (Math.random() - 0.5) * randomJitter;
+        const offsetY = gridY + (Math.random() - 0.5) * randomJitter;
+        
+        const starEl = document.createElement('div');
+        starEl.className = 'star';
+        starEl.style.left = `${offsetX}%`;
+        starEl.style.top = `${offsetY}%`;
+        starEl.style.backgroundImage = `url("images/${info.starImage}")`;
+
+        const clickableArea = document.createElement('div');
+        clickableArea.className = 'star-clickable-area';
+        clickableArea.addEventListener('click', () => handleStarClick(charmName));
+
+        starEl.appendChild(clickableArea);
+        starField.appendChild(starEl);
+
+        state.charms[charmName] = {
+            name: charmName,
+            level: 0,
+            category: charmCategory,
+            color: info.color, 
+            element: starEl, 
+            clickableElement: clickableArea,
+            position: { x: offsetX, y: offsetY }
+        };
+    });
+}
     
     function addEventListeners() {
         drawModeBtn.addEventListener('click', toggleDrawMode);
@@ -217,13 +239,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function resetAll() {
-        if (!confirm("정말 모든 선택을 초기화하고 처음부터 다시 시작하시겠습니까?")) return;
-        clearAllLines();
-        state.remainingStardust = state.totalStardust;
-        Object.values(state.charms).forEach(charm => { charm.level = 0; });
-        if (state.startStar) { state.startStar = null; }
-        updateDisplay();
-    }
+    if (!confirm("정말 모든 선택을 초기화하고 처음(1단계)부터 다시 시작하시겠습니까?")) return;
+    // 저장된 선택 데이터를 삭제하고, 1단계 페이지로 이동
+    localStorage.removeItem('userSelectedCharms');
+    window.location.href = 'select.html';
+}
 
     function updateUndoButtonState() {
         undoLineBtn.disabled = state.lines.length === 0;
