@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aster: 나만의 별자리 만들기 (4단계)</title>
     <style>
-        /* --- 기본 및 레이아웃 스타일 --- */
+        /* --- (기존 스타일은 변경 없음, 생략) --- */
         * {
             margin: 0;
             padding: 0;
@@ -37,7 +37,6 @@
             position: relative; 
         }
 
-        /* --- 시각화 영역 스타일 (왼쪽) --- */
         .visualization-panel {
             flex: 2;
             display: flex;
@@ -144,7 +143,6 @@
         .control-btn.danger:not(:disabled) { background-color: #fed7d7; color: #c53030; }
         .control-btn.danger:not(:disabled):hover { background-color: #fc8181; color: white; }
         
-        /* --- 제어판 스타일 (오른쪽) --- */
         .budget-panel {
             flex: 3;
             display: flex;
@@ -257,7 +255,6 @@
         }
         .stardust-display-wrapper span { font-size: 15px; }
 
-
         .charm-list-container {
             display: flex;
             flex-direction: row;
@@ -367,7 +364,6 @@
 
         .star-clickable-area:focus { outline: none; }
         
-        /* 온보딩 UI 스타일 */
         #onboarding-overlay {
             position: fixed;
             top: 0;
@@ -432,23 +428,23 @@
             cursor: pointer;
         }
 
-        /* --- [신규] 모바일 반응형 스타일 --- */
+        /* --- [수정] 모바일 반응형 스타일 --- */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
-                height: auto; /* 높이 제한 해제 */
-                overflow: auto; /* 세로 스크롤 허용 */
+                height: auto;
+                overflow: auto;
             }
 
             .app-container {
-                flex-direction: column; /* 수직 쌓기 */
-                height: auto; /* 높이 제한 해제 */
+                flex-direction: column;
+                height: auto;
                 padding: 15px;
                 gap: 20px;
             }
 
             .visualization-panel, .budget-panel {
-                flex: none; /* flex 비율 해제 */
+                flex: none;
                 width: 100%;
             }
 
@@ -464,37 +460,56 @@
             }
 
             .header-middle-row {
-                grid-template-columns: 1fr; /* 그리드 1열로 변경 */
+                grid-template-columns: 1fr;
                 gap: 8px;
             }
             .cost-guide {
-                grid-column: 1 / -1; /* 전체 너비 차지 */
+                grid-column: 1 / -1;
                 justify-self: center;
                 max-width: 100%;
             }
             .replay-container {
-                grid-column: 1 / -1; /* 전체 너비 차지 */
+                grid-column: 1 / -1;
                 justify-self: center;
             }
 
             .charm-list-container {
-                /* 모바일에서는 가로 스크롤 높이를 좀 더 확보 */
                 min-height: 280px; 
             }
 
+            /* ▼▼▼ 이 부분을 수정/교체해주세요 ▼▼▼ */
             .onboarding-tooltip {
-                /* 온보딩 툴팁 위치를 화면 기준으로 고정 */
                 position: fixed;
-                max-width: 90%;
-                left: 50% !important; /* JS에서 설정한 left를 덮어쓰기 */
+                width: 90%; 
+                max-width: 320px;
+                left: 50% !important;
                 transform: translateX(-50%);
-                z-index: 1001; /* 하이라이트보다 위에 오도록 */
+                z-index: 1001;
+                padding: 15px 20px;
+                bottom: 15px !important;
             }
+            .onboarding-tooltip h3 {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            .onboarding-tooltip p {
+                font-size: 13px;
+                line-height: 1.5;
+                margin-bottom: 15px;
+            }
+            .onboarding-tooltip #next-onboarding {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            .onboarding-tooltip #skip-onboarding {
+                font-size: 13px;
+            }
+            /* ▲▲▲ 여기까지 수정/교체 ▲▲▲ */
         }
-
     </style>
 </head>
 <body>
+    <!-- (HTML body 부분은 변경 없음, 생략) -->
     <div class="app-container" id="appContainer">
         
         <div class="visualization-panel" id="visualizationPanel">

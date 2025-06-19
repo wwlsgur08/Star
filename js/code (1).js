@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "전략적 사고", category: "목표 지향성 및 야망" }, { name: "자존감", category: "정서적 안정 및 자기 인식" }, { name: "넓은 시야", category: "지적 호기심 및 개방성" }, { name: "섬세함", category: "이해심 및 공감 능력" }, { name: "사교적 에너지", category: "유머감각 및 사교성" }, { name: "절제력", category: "성실성 및 책임감" }, { name: "겸손", category: "정서적 안정 및 자기 인식" }
     ];
 
-    // --- DOM 요소 참조 ---
     const starField = document.getElementById('starField');
     const charmListContainer = document.getElementById('charmListContainer');
     const remainingStardustEl = document.getElementById('remaining-stardust');
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetAllBtn = document.getElementById('resetAllBtn');
     const replayOnboardingBtn = document.getElementById('replayOnboardingBtn');
     
-    // --- 초기화 함수 ---
     function init() {
         createControlPanel();
         createStars();
@@ -65,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startOnboarding();
     }
 
-    // --- UI 생성 함수 ---
     function createControlPanel() {
         categoryDataForPanel.forEach((category) => {
             const categoryGroup = document.createElement('div');
@@ -285,9 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let scrollLeft;
 
         slider.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.level-btn')) {
-                return;
-            }
+            if (e.target.closest('.level-btn')) return;
             isDown = true;
             slider.classList.add('active-drag');
             startX = e.pageX - slider.offsetLeft;
@@ -313,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 온보딩 기능 ---
     let onboardingElements = {};
     let onboardingSteps = [];
     let currentOnboardingStep = 0;
@@ -346,6 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
         onboardingElements.skipBtn.addEventListener('click', endOnboarding);
     }
     
+    // ▼▼▼ 이 함수가 핵심 수정 부분입니다 ▼▼▼
     function showOnboardingStep(stepIndex) {
         const step = onboardingSteps[stepIndex];
         if (!step || !step.element) {
@@ -356,58 +351,55 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetElement = step.element;
         const isMobile = window.innerWidth <= 768;
 
-        // [수정] 모바일일 경우, 해당 요소가 보이도록 화면을 스크롤
+        const updateUI = () => {
+            const rect = targetElement.getBoundingClientRect();
+            const padding = 10;
+            
+            onboardingElements.highlight.style.width = `${rect.width + padding * 2}px`;
+            onboardingElements.highlight.style.height = `${rect.height + padding * 2}px`;
+            onboardingElements.highlight.style.top = `${rect.top - padding}px`;
+            onboardingElements.highlight.style.left = `${rect.left - padding}px`;
+            onboardingElements.tooltipText.innerHTML = step.text;
+
+            if (!isMobile) {
+                // 데스크탑 전용 툴팁 위치 계산
+                onboardingElements.tooltip.style.bottom = '';
+                onboardingElements.tooltip.style.transform = '';
+                const tooltipRect = onboardingElements.tooltip.getBoundingClientRect();
+                let top, left;
+                switch (step.tooltipPosition) {
+                    case 'left':
+                        left = rect.left - tooltipRect.width - 20 - padding;
+                        top = rect.top + rect.height / 2 - tooltipRect.height / 2;
+                        break;
+                    case 'right':
+                        left = rect.right + 20 + padding;
+                        top = rect.top + rect.height / 2 - tooltipRect.height / 2;
+                        break;
+                    case 'top':
+                        top = rect.top - tooltipRect.height - 20 - padding;
+                        left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+                        break;
+                    default:
+                        top = rect.bottom + 20 + padding;
+                        left = rect.left + rect.width / 2 - tooltipRect.width / 2;
+                        break;
+                }
+                if (left < 10) left = 10;
+                if (top < 10) top = 10;
+                if (left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
+                if (top + tooltipRect.height > window.innerHeight - 10) top = window.innerHeight - tooltipRect.height - 10;
+
+                onboardingElements.tooltip.style.top = `${top}px`;
+                onboardingElements.tooltip.style.left = `${left}px`;
+            }
+        };
+
         if (isMobile) {
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        
-        const rect = targetElement.getBoundingClientRect();
-        
-        const padding = 10;
-        onboardingElements.highlight.style.width = `${rect.width + padding * 2}px`;
-        onboardingElements.highlight.style.height = `${rect.height + padding * 2}px`;
-        onboardingElements.highlight.style.top = `${rect.top - padding}px`;
-        onboardingElements.highlight.style.left = `${rect.left - padding}px`;
-        
-        onboardingElements.tooltipText.innerHTML = step.text;
-        
-        if (isMobile) {
-            onboardingElements.tooltip.style.top = ''; 
-            onboardingElements.tooltip.style.bottom = '20px';
+            setTimeout(updateUI, 500); // 스크롤 애니메이션(0.5초) 후 UI 업데이트
         } else {
-            onboardingElements.tooltip.style.bottom = '';
-            onboardingElements.tooltip.style.transform = '';
-
-            const tooltipRect = onboardingElements.tooltip.getBoundingClientRect();
-            let top, left;
-
-            switch (step.tooltipPosition) {
-                case 'left':
-                    left = rect.left - tooltipRect.width - 20 - padding;
-                    top = rect.top + rect.height / 2 - tooltipRect.height / 2;
-                    break;
-                case 'right':
-                    left = rect.right + 20 + padding;
-                    top = rect.top + rect.height / 2 - tooltipRect.height / 2;
-                    break;
-                case 'top':
-                    top = rect.top - tooltipRect.height - 20 - padding;
-                    left = rect.left + rect.width / 2 - tooltipRect.width / 2;
-                    break;
-                case 'bottom':
-                default:
-                    top = rect.bottom + 20 + padding;
-                    left = rect.left + rect.width / 2 - tooltipRect.width / 2;
-                    break;
-            }
-            
-            if (left < 10) left = 10;
-            if (top < 10) top = 10;
-            if (left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
-            if (top + tooltipRect.height > window.innerHeight - 10) top = window.innerHeight - tooltipRect.height - 10;
-
-            onboardingElements.tooltip.style.top = `${top}px`;
-            onboardingElements.tooltip.style.left = `${left}px`;
+            updateUI(); // 데스크탑은 즉시 UI 업데이트
         }
 
         if (stepIndex === onboardingSteps.length - 1) {
@@ -420,15 +412,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function startOnboarding() {
         onboardingElements.overlay.style.display = 'block';
         currentOnboardingStep = 0;
-        setTimeout(() => showOnboardingStep(currentOnboardingStep), 50);
+        setTimeout(() => showOnboardingStep(currentOnboardingStep), 100);
     }
 
     function endOnboarding() {
         onboardingElements.overlay.style.display = 'none';
-        // [수정] 온보딩이 끝나면 페이지 최상단으로 스크롤
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // --- 애플리케이션 시작 ---
     init();
 });
