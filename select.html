@@ -41,7 +41,7 @@
         }
         .selection-grid {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             gap: 15px;
             width: 100%;
         }
@@ -49,7 +49,7 @@
             cursor: grabbing;
         }
         .category-group {
-            flex: 1;
+            flex-shrink: 0;
             padding: 12px;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
@@ -71,16 +71,11 @@
             flex-direction: column;
             gap: 6px;
         }
-
-        /* ▼▼▼ [핵심 수정] 모든 버튼의 너비를 고정값으로 통일 ▼▼▼ */
         .selectable-charm {
-            /* '연락 등 관계를 이어나가는 능력'에 맞춘 최적 너비 */
-            width: 210px;
-            /* 패딩, 테두리가 너비에 포함되도록 설정 */
+            width: 180px;
             box-sizing: border-box;
-
             font-size: 12px;
-            padding: 8px 10px; /* 위아래 패딩을 좀 더 줘서 보기 좋게 */
+            padding: 8px 10px;
             border-radius: 6px;
             border: 1px solid #ccc;
             background-color: #fff;
@@ -89,7 +84,6 @@
             text-align: center;
             font-weight: 500;
         }
-
         .selectable-charm.selected {
             background-color: #4338ca;
             color: white;
@@ -177,15 +171,11 @@
             .selection-grid::-webkit-scrollbar-thumb:hover {
                 background: #718096;
             }
-
             .charm-container {
-                /* 고정 너비를 가진 버튼들이 중앙에 오도록 정렬 */
                 align-items: center;
             }
-
             .category-group {
-                /* 버튼 너비(210px)에 맞춰 그룹 너비도 조정 */
-                flex: 0 0 240px;
+                flex: 0 0 220px;
             }
             .footer {
                 padding-left: 15px;
@@ -217,6 +207,6 @@
             <button id="completeBtn" disabled>선택 완료하고 점수 배분하러 가기</button>
         </footer>
     </div>
-    <script src="js/select.js"></script> <!-- JS 파일은 정상적인 이전 버전으로 두시면 됩니다. -->
+    <script src="js/select.js"></script>
 </body>
 </html>

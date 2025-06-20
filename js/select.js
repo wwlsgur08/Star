@@ -71,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'main.html';
     }
     
+    // ▼▼▼ [신규] 드래그 스크롤 기능 함수 ▼▼▼
     function setupDragScroll() {
         const slider = document.getElementById('selectionGrid');
         if (!slider) return;
@@ -80,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let scrollLeft;
 
         slider.addEventListener('mousedown', (e) => {
+            // 버튼 클릭 시에는 드래그가 시작되지 않도록 예외 처리
             if (e.target.classList.contains('selectable-charm')) return;
             isDown = true;
             slider.classList.add('active-drag');
@@ -101,37 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDown) return;
             e.preventDefault();
             const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2;
+            const walk = (x - startX) * 2; // *2는 스크롤 감도를 높이기 위함
             slider.scrollLeft = scrollLeft - walk;
-        });
-    }
-
-    // ▼▼▼ [신규] 각 카테고리 내 버튼 너비를 통일시키는 함수 ▼▼▼
-    function unifyCharmButtonWidths() {
-        const categoryGroups = document.querySelectorAll('.category-group');
-
-        categoryGroups.forEach(group => {
-            let maxWidth = 0;
-            const charms = group.querySelectorAll('.selectable-charm');
-
-            // 1단계: 해당 그룹에서 가장 넓은 버튼의 너비를 찾습니다.
-            charms.forEach(charm => {
-                // offsetWidth는 패딩과 테두리를 포함한 실제 너비를 반환합니다.
-                if (charm.offsetWidth > maxWidth) {
-                    maxWidth = charm.offsetWidth;
-                }
-            });
-
-            // 2단계: 찾은 최대 너비를 해당 그룹의 모든 버튼에 적용합니다.
-            charms.forEach(charm => {
-                charm.style.width = `${maxWidth}px`;
-            });
         });
     }
 
     // --- 실행 ---
     createSelectionPanel();
-    unifyCharmButtonWidths(); // [수정] 패널 생성 후 너비 통일 함수 실행
-    setupDragScroll();
+    setupDragScroll(); // 드래그 스크롤 기능 활성화
     completeBtn.addEventListener('click', handleCompletion);
 });
