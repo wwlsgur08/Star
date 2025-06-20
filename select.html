@@ -1,13 +1,14 @@
+--- START OF FILE select.html ---
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aster: 1단계 - 매력 선택</title>
-        <style>
+    <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            /* [수정] 배경에 보라색 그라데이션 테마 적용 */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #333;
             padding: 20px;
@@ -15,10 +16,12 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            /* [신규] 모바일에서 스크롤 시 부드럽게 */
+            -webkit-overflow-scrolling: touch;
         }
         .container {
             width: 100%;
-            max-width: 1400px; /* [수정] 너비를 넓혀서 한 줄에 다 보이도록 */
+            max-width: 1400px;
             margin: 0 auto;
             background: #fff;
             padding: 25px 30px;
@@ -32,56 +35,59 @@
             margin-bottom: 25px;
         }
         header h1 {
-            font-size: 22px; /* [수정] 폰트 크기 조정 */
+            font-size: 22px;
             margin-bottom: 5px;
         }
         header p {
-            font-size: 13px; /* [수정] 폰트 크기 조정 */
+            font-size: 13px;
             color: #666;
         }
         .selection-grid {
-            display: flex; /* [수정] Flexbox 레이아웃으로 변경 */
-            justify-content: space-between; /* [수정] 균등 분배 */
+            display: flex;
+            justify-content: space-between;
             gap: 15px;
             width: 100%;
+            /* [신규] 드래그 스크롤 시 커서 모양 변경을 위한 클래스 */
+        }
+        .selection-grid.active-drag {
+            cursor: grabbing;
         }
         .category-group {
-            flex: 1; /* [수정] 모든 그룹이 동일한 너비를 갖도록 */
-            padding: 12px; /* [수정] 패딩 조정 */
+            flex: 1;
+            padding: 12px;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
-            background-color: #f8f9fa; /* [신규] 카테고리 배경색 */
+            background-color: #f8f9fa;
         }
         .category-title {
-            font-size: 13px; /* [수정] 폰트 크기 조정 */
+            font-size: 13px;
             font-weight: 700;
             margin-bottom: 10px;
             padding-bottom: 5px;
             border-bottom: 2px solid; /* 색상은 JS에서 적용 */
             display: inline-block;
-            align-self: flex-start; /* [신규] 왼쪽 정렬 유지 */
+            align-self: flex-start;
         }
         .charm-container {
             display: flex;
             flex-direction: column;
-            gap: 6px; /* [수정] 간격 조정 */
+            gap: 6px;
         }
         .selectable-charm {
-            font-size: 12px; /* [수정] 폰트 크기 조정 */
-            padding: 6px 10px; /* [수정] 패딩 조정 */
+            font-size: 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid #ccc;
             background-color: #fff;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
-            font-weight: 500; /* [신규] 기본 폰트 두께 */
+            font-weight: 500;
         }
         .selectable-charm.selected {
-            /* [수정] 선택 시 테마 색상 적용 */
-            background-color: #4338ca; /* 진한 보라색 */
+            background-color: #4338ca;
             color: white;
             border-color: #4338ca;
             font-weight: 600;
@@ -96,7 +102,6 @@
             font-size: 16px;
             font-weight: 600;
             color: white;
-            /* [수정] 버튼에 테마 그라데이션 적용 */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
             padding: 12px 30px;
@@ -113,6 +118,82 @@
             background: #ccc;
             cursor: not-allowed;
             box-shadow: none;
+        }
+
+        /* ▼▼▼ [신규] 모바일 반응형 스타일 ▼▼▼ */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+            }
+            .container {
+                width: 100%;
+                min-height: 100vh;
+                padding: 20px 0; /* 위아래 패딩, 좌우는 0 */
+                border-radius: 0;
+                box-shadow: none;
+                display: flex;
+                flex-direction: column;
+            }
+            header {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            header h1 {
+                font-size: 20px;
+            }
+            header p {
+                font-size: 12px;
+            }
+            main {
+                flex-grow: 1; /* main 영역이 남은 공간을 채우도록 */
+                overflow: hidden; /* 내부 스크롤 컨테이너를 제어하기 위함 */
+                width: 100%;
+            }
+            .selection-grid {
+                /* 핵심: 가로 스크롤을 가능하게 함 */
+                overflow-x: auto;
+                justify-content: flex-start; /* 왼쪽부터 정렬 */
+                flex-wrap: nowrap; /* 줄바꿈 방지 */
+                
+                /* 터치 스크롤을 위한 설정 */
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+                
+                padding: 15px;
+                margin-bottom: -20px; /* 스크롤바 공간 확보 */
+                cursor: grab;
+            }
+            /* Chrome, Safari, Opera에서 스크롤바 숨기기 */
+            .selection-grid::-webkit-scrollbar {
+                height: 8px;
+            }
+            .selection-grid::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            .selection-grid::-webkit-scrollbar-thumb {
+                background: #a0aec0;
+                border-radius: 4px;
+            }
+            .selection-grid::-webkit-scrollbar-thumb:hover {
+                background: #718096;
+            }
+
+            .category-group {
+                /* 핵심: 각 카테고리가 줄어들지 않고 고정 너비를 갖게 함 */
+                flex: 0 0 240px; /* grow:0, shrink:0, basis:240px */
+            }
+
+            .footer {
+                padding-left: 15px;
+                padding-right: 15px;
+                margin-top: 15px;
+            }
+            #completeBtn {
+                width: 100%; /* 버튼을 꽉 채움 */
+                font-size: 15px;
+                padding: 14px 20px;
+            }
         }
     </style>
 </head>

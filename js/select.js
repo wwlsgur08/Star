@@ -1,5 +1,4 @@
 // --- START OF FILE select.js ---
-// [수정] select.js 파일 전체를 아래 코드로 교체해주세요.
 
 document.addEventListener('DOMContentLoaded', () => {
     const categoryData = [
@@ -67,16 +66,50 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // [수정] 1. 선택된 매력 목록을 배열로 변환합니다.
         const charmsArray = Array.from(selectedCharms);
-
-        // [수정] 2. 브라우저 저장소(localStorage)에 'userSelectedCharms'라는 이름으로 저장합니다.
         localStorage.setItem('userSelectedCharms', JSON.stringify(charmsArray));
-        
-        // [수정] 3. 404 에러를 해결하기 위해 페이지 이동 주소를 'main.html'로 정확히 지정합니다.
         window.location.href = 'main.html';
     }
+    
+    // ▼▼▼ [신규] 드래그 스크롤 기능 함수 ▼▼▼
+    function setupDragScroll() {
+        const slider = document.getElementById('selectionGrid');
+        if (!slider) return;
 
-    completeBtn.addEventListener('click', handleCompletion);
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            // 버튼 클릭 시에는 드래그가 시작되지 않도록 예외 처리
+            if (e.target.classList.contains('selectable-charm')) return;
+            isDown = true;
+            slider.classList.add('active-drag');
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => {
+            isDown = false;
+            slider.classList.remove('active-drag');
+        });
+
+        slider.addEventListener('mouseup', () => {
+            isDown = false;
+            slider.classList.remove('active-drag');
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2; // *2는 스크롤 감도를 높이기 위함
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    }
+
+    // --- 실행 ---
     createSelectionPanel();
+    setupDragScroll(); // 드래그 스크롤 기능 활성화
+    completeBtn.addEventListener('click', handleCompletion);
 });
