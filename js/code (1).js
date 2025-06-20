@@ -359,56 +359,68 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // [신규] 결과 카드 생성 함수
-    async function generateResultCard() {
-        const starContainer = document.getElementById('starContainer');
-        const userNameInput = document.getElementById('userNameInput');
-        const userName = userNameInput.value.trim();
+    // [신규] 결과 카드 생성 함수 (수정)
+async function generateResultCard() {
+    const starContainer = document.getElementById('starContainer');
+    const userNameInput = document.getElementById('userNameInput');
+    const userName = userNameInput.value.trim();
 
-        if (!userName) {
-            alert('이름을 입력해주세요.');
-            userNameInput.focus();
-            return;
-        }
-
-        const createCardBtn = document.getElementById('createCardBtn');
-        createCardBtn.textContent = '생성 중...';
-        createCardBtn.disabled = true;
-
-        try {
-            // [수정] 불필요한 경로 수정 로직을 제거했습니다.
-            const canvas = await html2canvas(starContainer, {
-                backgroundColor: null,
-                useCORS: true, 
-            });
-
-            const constellationImage = canvas.toDataURL('image/png');
-            
-            const resultCharms = Object.values(state.charms)
-                .filter(charm => charm.level > 0)
-                .sort((a, b) => b.level - a.level)
-                .map(charm => ({
-                    name: charm.name,
-                    level: charm.level,
-                    color: charm.color
-                }));
-
-            const resultData = {
-                userName: userName,
-                constellationImage: constellationImage,
-                charms: resultCharms
-            };
-
-            localStorage.setItem('asterResultData', JSON.stringify(resultData));
-            window.location.href = 'result.html';
-
-        } catch (error) {
-            console.error('결과 카드 생성 중 오류 발생:', error);
-            alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
-            createCardBtn.textContent = '결과 카드 만들기';
-            createCardBtn.disabled = false;
-        }
+    if (!userName) {
+        alert('이름을 입력해주세요.');
+        userNameInput.focus();
+        return;
     }
+
+    const createCardBtn = document.getElementById('createCardBtn');
+    createCardBtn.textContent = '생성 중...';
+    createCardBtn.disabled = true;
+
+    // ▼▼▼ [핵심 수정] 캡처 전에 배경을 강제로 투명하게 만듭니다 ▼▼▼
+    const originalBackground = starContainer.style.background;
+    starContainer.style.background = 'transparent'; 
+    // ▲▲▲ 여기까지 ▲▲▲
+
+    try {
+        const canvas = await html2canvas(starContainer, {
+            backgroundColor: null,
+            useCORS: true, 
+        });
+        
+        // ▼▼▼ [핵심 수정] 캡처가 끝나면 원래 배경으로 되돌립니다 ▼▼▼
+        starContainer.style.background = originalBackground;
+        // ▲▲▲ 여기까지 ▲▲▲
+
+        const constellationImage = canvas.toDataURL('image/png');
+        
+        const resultCharms = Object.values(state.charms)
+            .filter(charm => charm.level > 0)
+            .sort((a, b) => b.level - a.level)
+            .map(charm => ({
+                name: charm.name,
+                level: charm.level,
+                color: charm.color
+            }));
+
+        const resultData = {
+            userName: userName,
+            constellationImage: constellationImage,
+            charms: resultCharms
+        };
+
+        localStorage.setItem('asterResultData', JSON.stringify(resultData));
+        window.location.href = 'result.html';
+
+    } catch (error) {
+        // ▼▼▼ [핵심 수정] 에러가 발생해도 원래 배경으로 되돌립니다 ▼▼▼
+        starContainer.style.background = originalBackground;
+        // ▲▲▲ 여기까지 ▲▲▲
+
+        console.error('결과 카드 생성 중 오류 발생:', error);
+        alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
+        createCardBtn.textContent = '결과 카드 만들기';
+        createCardBtn.disabled = false;
+    }
+}
 
     // --- 프로그램 실행 ---
     init();
