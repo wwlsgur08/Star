@@ -71,9 +71,16 @@
             flex-direction: column;
             gap: 6px;
         }
+
+        /* ▼▼▼ [핵심 수정] 모든 버튼의 너비를 고정값으로 통일 ▼▼▼ */
         .selectable-charm {
+            /* '연락 등 관계를 이어나가는 능력'에 맞춘 최적 너비 */
+            width: 210px;
+            /* 패딩, 테두리가 너비에 포함되도록 설정 */
+            box-sizing: border-box;
+
             font-size: 12px;
-            padding: 6px 10px;
+            padding: 8px 10px; /* 위아래 패딩을 좀 더 줘서 보기 좋게 */
             border-radius: 6px;
             border: 1px solid #ccc;
             background-color: #fff;
@@ -82,6 +89,7 @@
             text-align: center;
             font-weight: 500;
         }
+
         .selectable-charm.selected {
             background-color: #4338ca;
             color: white;
@@ -119,7 +127,6 @@
         /* ▼▼▼ 모바일 반응형 스타일 ▼▼▼ */
         @media (max-width: 768px) {
             body {
-                /* [수정] 이 부분이 핵심입니다. flex 정렬을 해제합니다. */
                 display: block;
                 padding: 0;
             }
@@ -170,7 +177,14 @@
             .selection-grid::-webkit-scrollbar-thumb:hover {
                 background: #718096;
             }
+
+            .charm-container {
+                /* 고정 너비를 가진 버튼들이 중앙에 오도록 정렬 */
+                align-items: center;
+            }
+
             .category-group {
+                /* 버튼 너비(210px)에 맞춰 그룹 너비도 조정 */
                 flex: 0 0 240px;
             }
             .footer {
@@ -203,6 +217,6 @@
             <button id="completeBtn" disabled>선택 완료하고 점수 배분하러 가기</button>
         </footer>
     </div>
-    <script src="js/select.js"></script>
+    <script src="js/select.js"></script> <!-- JS 파일은 정상적인 이전 버전으로 두시면 됩니다. -->
 </body>
 </html>
