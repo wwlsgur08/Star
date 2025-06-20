@@ -404,48 +404,67 @@ async function generateResultCard() {
         return;
     }
 
-    alert('결과 카드를 생성합니다. 잠시만 기다려주세요...');
+    // [수정] 대기 메시지를 alert 대신, 화면에 직접 표시 (선택사항이지만 더 나은 경험)
+    const createCardBtn = document.getElementById('createCardBtn');
+    createCardBtn.textContent = '생성 중...';
+    createCardBtn.disabled = true;
 
     try {
-        // html2canvas를 사용하여 별자리 컨테이너를 캡처합니다.
-        const canvas = await html2canvas(starContainer, {
-            backgroundColor: null, // ★★★ 핵심: 배경을 투명하게 설정합니다.
-            useCORS: true // 외부 이미지가 있을 경우 필요
+        // [수정] 이미지 경로를 상대 경로로 명시적으로 수정
+        // html2canvas가 상대 경로를 더 잘 인식하도록 모든 별의 이미지 경로를 수정합니다.
+        const starElements = starContainer.querySelectorAll('.star');
+        starElements.forEach(star => {
+            const currentBg = star.style.backgroundImage; // url("images/star-red.png")
+            if (currentBg.includes('/images/')) {
+                 // 이미 절대 경로이면 그대로 둠 (배포 환경)
+            } else if (currentBg.includes('images/')) {
+                 // 로컬 환경에서 상대 경로를 명확히 해줌
+                 const imageName = currentBg.split('/').pop().replace('")', '');
+                 star.style.backgroundImage = `url('./images/${imageName}')`;
+            }
         });
 
-        // 캡처된 캔버스를 PNG 이미지 데이터(긴 텍스트)로 변환합니다.
+
+        const canvas = await html2canvas(starContainer, {
+            backgroundColor: null,
+            useCORS: true,
+            // 로컬 테스트 시 CORS 오류를 피하기 위한 프록시 설정 (Vercel에서는 불필요)
+            // proxy: '/__proxy' 
+            // Vercel 환경에서는 동일 출처(Same-origin)이므로 프록시가 필요 없습니다.
+        });
+
         const constellationImage = canvas.toDataURL('image/png');
         
-        // 저장할 매력 목록을 정리합니다. (레벨이 1 이상인 것만)
         const resultCharms = Object.values(state.charms)
             .filter(charm => charm.level > 0)
-            .sort((a, b) => b.level - a.level) // 높은 레벨 순으로 정렬
+            .sort((a, b) => b.level - a.level)
             .map(charm => ({
                 name: charm.name,
                 level: charm.level,
                 color: charm.color
             }));
 
-        // 모든 정보를 하나의 객체로 묶습니다.
         const resultData = {
             userName: userName,
             constellationImage: constellationImage,
             charms: resultCharms
         };
 
-        // 브라우저 저장소(localStorage)에 결과 데이터를 저장합니다.
         localStorage.setItem('asterResultData', JSON.stringify(resultData));
 
-        // 모든 준비가 끝나면 result.html 페이지로 이동합니다.
         window.location.href = 'result.html';
 
     } catch (error) {
+        // [수정] 어떤 에러인지 콘솔에 자세히 출력
         console.error('결과 카드 생성 중 오류 발생:', error);
         alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
+        
+        // 버튼 원래 상태로 복구
+        createCardBtn.textContent = '결과 카드 만들기';
+        createCardBtn.disabled = false;
     }
 }
 
-// [신규] '결과 카드 만들기' 버튼에 클릭 이벤트 연결
 const createCardBtn = document.getElementById('createCardBtn');
 if (createCardBtn) {
     createCardBtn.addEventListener('click', generateResultCard);
