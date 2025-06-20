@@ -190,6 +190,38 @@
             }
         }
     </style>
+
+    <!-- 카카오톡 인앱 브라우저에서 외부 브라우저로 강제 이동시키는 스크립트 -->
+<script type.text/javascript>
+    // 페이지가 로드되자마자 이 함수를 실행합니다.
+    (function() {
+        // 사용자의 브라우저 정보를 담고 있는 변수입니다. (User Agent)
+        const userAgent = navigator.userAgent.toLowerCase();
+
+        // 만약 카카오톡 인앱 브라우저가 아니라면, 여기서 함수를 종료합니다.
+        if (userAgent.indexOf('kakaotalk') === -1) {
+            return;
+        }
+
+        // 현재 페이지의 주소를 가져옵니다.
+        const currentUrl = location.href;
+
+        // 안드로이드인 경우
+        if (userAgent.indexOf('android') > -1) {
+            // 안드로이드는 '인텐트(intent)'라는 특별한 형식으로 외부 브라우저를 호출합니다.
+            // Chrome으로 열기를 시도하고, 없으면 기본 브라우저로 열립니다.
+            location.href = 'intent:' +
+                currentUrl.replace(/https?:\/\//i, '') +
+                '#Intent;scheme=https;package=com.android.chrome;end';
+        }
+        // 아이폰, 아이패드 등 iOS인 경우
+        else if (userAgent.indexOf('iphone') > -1 || userAgent.indexOf('ipad') > -1) {
+            // iOS는 현재 주소를 다시 한번 요청하는 것만으로도
+            // 외부 브라우저(주로 Safari)를 열어주는 경우가 많습니다.
+            location.href = currentUrl;
+        }
+    })();
+</script>
 </head>
 <body>
     <div class="container">
