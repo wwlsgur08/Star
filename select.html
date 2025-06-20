@@ -1,5 +1,3 @@
---- START OF FILE select.html ---
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -16,7 +14,6 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            /* [신규] 모바일에서 스크롤 시 부드럽게 */
             -webkit-overflow-scrolling: touch;
         }
         .container {
@@ -47,7 +44,6 @@
             justify-content: space-between;
             gap: 15px;
             width: 100%;
-            /* [신규] 드래그 스크롤 시 커서 모양 변경을 위한 클래스 */
         }
         .selection-grid.active-drag {
             cursor: grabbing;
@@ -66,7 +62,7 @@
             font-weight: 700;
             margin-bottom: 10px;
             padding-bottom: 5px;
-            border-bottom: 2px solid; /* 색상은 JS에서 적용 */
+            border-bottom: 2px solid;
             display: inline-block;
             align-self: flex-start;
         }
@@ -120,16 +116,17 @@
             box-shadow: none;
         }
 
-        /* ▼▼▼ [신규] 모바일 반응형 스타일 ▼▼▼ */
+        /* ▼▼▼ 모바일 반응형 스타일 ▼▼▼ */
         @media (max-width: 768px) {
             body {
+                /* [수정] 이 부분이 핵심입니다. flex 정렬을 해제합니다. */
+                display: block;
                 padding: 0;
-                align-items: flex-start;
             }
             .container {
                 width: 100%;
                 min-height: 100vh;
-                padding: 20px 0; /* 위아래 패딩, 좌우는 0 */
+                padding: 20px 0;
                 border-radius: 0;
                 box-shadow: none;
                 display: flex;
@@ -146,25 +143,20 @@
                 font-size: 12px;
             }
             main {
-                flex-grow: 1; /* main 영역이 남은 공간을 채우도록 */
-                overflow: hidden; /* 내부 스크롤 컨테이너를 제어하기 위함 */
+                flex-grow: 1;
+                overflow: hidden;
                 width: 100%;
             }
             .selection-grid {
-                /* 핵심: 가로 스크롤을 가능하게 함 */
                 overflow-x: auto;
-                justify-content: flex-start; /* 왼쪽부터 정렬 */
-                flex-wrap: nowrap; /* 줄바꿈 방지 */
-                
-                /* 터치 스크롤을 위한 설정 */
-                -ms-overflow-style: none;  /* IE and Edge */
-                scrollbar-width: none;  /* Firefox */
-                
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
                 padding: 15px;
-                margin-bottom: -20px; /* 스크롤바 공간 확보 */
+                margin-bottom: -20px;
                 cursor: grab;
             }
-            /* Chrome, Safari, Opera에서 스크롤바 숨기기 */
             .selection-grid::-webkit-scrollbar {
                 height: 8px;
             }
@@ -178,19 +170,16 @@
             .selection-grid::-webkit-scrollbar-thumb:hover {
                 background: #718096;
             }
-
             .category-group {
-                /* 핵심: 각 카테고리가 줄어들지 않고 고정 너비를 갖게 함 */
-                flex: 0 0 240px; /* grow:0, shrink:0, basis:240px */
+                flex: 0 0 240px;
             }
-
             .footer {
                 padding-left: 15px;
                 padding-right: 15px;
                 margin-top: 15px;
             }
             #completeBtn {
-                width: 100%; /* 버튼을 꽉 채움 */
+                width: 100%;
                 font-size: 15px;
                 padding: 14px 20px;
             }
