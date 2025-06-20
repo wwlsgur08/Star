@@ -1,9 +1,7 @@
 // --- START OF FILE code (1).js ---
-// [수정] code (1).js 파일 전체를 아래 코드로 교체해주세요.
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 데이터 정의 (기존과 동일) ---
     const state = {
         totalStardust: 40,
         remainingStardust: 40,
@@ -41,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: "전략적 사고", category: "목표 지향성 및 야망" }, { name: "자존감", category: "정서적 안정 및 자기 인식" }, { name: "넓은 시야", category: "지적 호기심 및 개방성" }, { name: "섬세함", category: "이해심 및 공감 능력" }, { name: "사교적 에너지", category: "유머감각 및 사교성" }, { name: "절제력", category: "성실성 및 책임감" }, { name: "겸손", category: "정서적 안정 및 자기 인식" }
     ];
 
-    // --- DOM 요소 (기존과 동일) ---
     const starField = document.getElementById('starField');
     const charmListContainer = document.getElementById('charmListContainer');
     const remainingStardustEl = document.getElementById('remaining-stardust');
@@ -52,58 +49,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetAllBtn = document.getElementById('resetAllBtn');
     const replayOnboardingBtn = document.getElementById('replayOnboardingBtn');
     
-    // [수정] 프로그램 시작 함수
     function init() {
-        // 1. 브라우저 저장소에서 1단계에서 저장한 매력 데이터를 가져옵니다.
         const savedCharmsJSON = localStorage.getItem('userSelectedCharms');
-
-        // 2. 만약 데이터가 없으면(1단계를 건너뛰고 바로 접속하면), 1단계로 가라는 안내창을 보여주고 실행을 중단합니다.
         if (!savedCharmsJSON) {
             document.getElementById('redirect-overlay').style.display = 'flex';
             return;
         }
-
-        // 3. 데이터가 있으면, 화면을 그리기 시작합니다.
         const selectedCharmNames = JSON.parse(savedCharmsJSON);
-        
-        // 4. 선택된 매력 목록을 인자로 전달하여, 해당 매력들만 화면에 그립니다.
         createControlPanel(selectedCharmNames);
         createStars(selectedCharmNames);
-        
         addEventListeners();
         setupOnboarding();
         setupDragScroll();
         updateDisplay();
         updateUndoButtonState();
-        
-        // 온보딩은 매력이 하나라도 있을 때만 시작합니다.
         if (selectedCharmNames.length > 0) {
             startOnboarding();
         }
     }
 
-    // [수정] 선택된 매력만으로 컨트롤 패널을 생성하는 함수
     function createControlPanel(selectedCharmNames) {
         categoryDataForPanel.forEach((category) => {
-            // 이 카테고리의 매력 중, 사용자가 선택한 매력만 필터링합니다.
             const charmsInThisCategory = category.charms.filter(charm => selectedCharmNames.includes(charm));
-
-            // 만약 이 카테고리에서 선택된 매력이 하나도 없다면, 카테고리 그룹 자체를 만들지 않고 건너뜁니다.
             if (charmsInThisCategory.length === 0) return;
-
             const categoryGroup = document.createElement('div');
             categoryGroup.className = 'category-group';
-
             const categoryTitle = document.createElement('h3');
             categoryTitle.className = 'category-title';
             categoryTitle.textContent = category.name;
             categoryTitle.style.borderColor = categoryInfo[category.name].color;
             categoryGroup.appendChild(categoryTitle);
-            
             const itemsWrapper = document.createElement('div');
             itemsWrapper.className = 'charm-items-wrapper';
-            
-            // 필터링된 매력 목록을 기반으로 아이템들을 생성합니다.
             charmsInThisCategory.forEach(charmName => {
                 const charmItem = document.createElement('div');
                 charmItem.className = 'charm-item';
@@ -129,40 +106,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // [수정] 선택된 매력에 해당하는 별만 생성하는 함수
     function createStars(selectedCharmNames) {
         shuffledCharmLayout.forEach((charm, index) => {
-            // 사용자가 선택한 매력이 아니면, 별을 만들지 않고 건너뜁니다.
             if (!selectedCharmNames.includes(charm.name)) return;
-            
             const charmName = charm.name;
             const charmCategory = charm.category;
             const info = categoryInfo[charmCategory];
-
             const row = Math.floor(index / 7);
             const col = index % 7;
-            
             let gridX = 8 + (col * (100 - 8 * 2) / (7 - 1));
             let gridY = 8 + (row * (100 - 8 * 2) / (7 - 1));
-
             const randomJitter = 4;
             const offsetX = gridX + (Math.random() - 0.5) * randomJitter;
             const offsetY = gridY + (Math.random() - 0.5) * randomJitter;
-            
             const starEl = document.createElement('div');
             starEl.className = 'star';
             starEl.style.left = `${offsetX}%`;
             starEl.style.top = `${offsetY}%`;
-            // 이미지 경로는 실제 프로젝트 구조에 맞게 확인해주세요. (예: "images/star-pink.png")
-            starEl.style.backgroundImage = `url("images/${info.starImage}")`;
+            
+            // ▼▼▼ [핵심 수정] 이미지 경로를 절대 경로로 변경 ▼▼▼
+            starEl.style.backgroundImage = `url("/images/${info.starImage}")`;
+            // ▲▲▲ 이 슬래시(/) 하나가 모든 차이를 만듭니다 ▲▲▲
 
             const clickableArea = document.createElement('div');
             clickableArea.className = 'star-clickable-area';
             clickableArea.addEventListener('click', () => handleStarClick(charmName));
-
             starEl.appendChild(clickableArea);
             starField.appendChild(starEl);
-
             state.charms[charmName] = {
                 name: charmName, level: 0, category: charmCategory,
                 color: info.color, element: starEl, clickableElement: clickableArea,
@@ -177,17 +147,21 @@ document.addEventListener('DOMContentLoaded', () => {
         clearLinesBtn.addEventListener('click', clearAllLines);
         resetAllBtn.addEventListener('click', resetAll);
         replayOnboardingBtn.addEventListener('click', startOnboarding);
+
+        // [이동] init 함수 안에서 addEventListeners로 이동
+        const createCardBtn = document.getElementById('createCardBtn');
+        if (createCardBtn) {
+            createCardBtn.addEventListener('click', generateResultCard);
+        }
     }
     
-    // [수정] '모두 초기화' 함수
     function resetAll() {
         if (!confirm("정말 모든 선택을 초기화하고 처음(1단계)부터 다시 시작하시겠습니까?")) return;
-        // 저장된 선택 데이터를 삭제하고, 1단계 페이지로 이동합니다.
         localStorage.removeItem('userSelectedCharms');
         window.location.href = 'select.html';
     }
 
-    // --- 이하 함수들은 기존 코드와 동일합니다. (수정 없음) ---
+    // --- 이하 로직은 크게 변경 없습니다 ---
     function handleLevelButtonClick(charmName, newLevel) {
         const charm = state.charms[charmName];
         if (charm.level === newLevel) return;
@@ -315,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 온보딩 함수들 (변경 없음) ---
     let onboardingElements = {};
     let onboardingSteps = [];
     let currentOnboardingStep = 0;
@@ -384,88 +359,57 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // [신규] 결과 카드 생성 함수
+    async function generateResultCard() {
+        const starContainer = document.getElementById('starContainer');
+        const userNameInput = document.getElementById('userNameInput');
+        const userName = userNameInput.value.trim();
+
+        if (!userName) {
+            alert('이름을 입력해주세요.');
+            userNameInput.focus();
+            return;
+        }
+
+        const createCardBtn = document.getElementById('createCardBtn');
+        createCardBtn.textContent = '생성 중...';
+        createCardBtn.disabled = true;
+
+        try {
+            // [수정] 불필요한 경로 수정 로직을 제거했습니다.
+            const canvas = await html2canvas(starContainer, {
+                backgroundColor: null,
+                useCORS: true, 
+            });
+
+            const constellationImage = canvas.toDataURL('image/png');
+            
+            const resultCharms = Object.values(state.charms)
+                .filter(charm => charm.level > 0)
+                .sort((a, b) => b.level - a.level)
+                .map(charm => ({
+                    name: charm.name,
+                    level: charm.level,
+                    color: charm.color
+                }));
+
+            const resultData = {
+                userName: userName,
+                constellationImage: constellationImage,
+                charms: resultCharms
+            };
+
+            localStorage.setItem('asterResultData', JSON.stringify(resultData));
+            window.location.href = 'result.html';
+
+        } catch (error) {
+            console.error('결과 카드 생성 중 오류 발생:', error);
+            alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
+            createCardBtn.textContent = '결과 카드 만들기';
+            createCardBtn.disabled = false;
+        }
+    }
+
     // --- 프로그램 실행 ---
     init();
 });
-
-// ... 기존 code (1).js 파일의 모든 내용 ...
-
-// ▼▼▼ 파일 맨 아래에 이 코드를 추가하세요 ▼▼▼
-
-// [신규] 결과 카드 생성 함수
-async function generateResultCard() {
-    const starContainer = document.getElementById('starContainer');
-    const userNameInput = document.getElementById('userNameInput');
-    const userName = userNameInput.value.trim();
-
-    if (!userName) {
-        alert('이름을 입력해주세요.');
-        userNameInput.focus();
-        return;
-    }
-
-    // [수정] 대기 메시지를 alert 대신, 화면에 직접 표시 (선택사항이지만 더 나은 경험)
-    const createCardBtn = document.getElementById('createCardBtn');
-    createCardBtn.textContent = '생성 중...';
-    createCardBtn.disabled = true;
-
-    try {
-        // [수정] 이미지 경로를 상대 경로로 명시적으로 수정
-        // html2canvas가 상대 경로를 더 잘 인식하도록 모든 별의 이미지 경로를 수정합니다.
-        const starElements = starContainer.querySelectorAll('.star');
-        starElements.forEach(star => {
-            const currentBg = star.style.backgroundImage; // url("images/star-red.png")
-            if (currentBg.includes('/images/')) {
-                 // 이미 절대 경로이면 그대로 둠 (배포 환경)
-            } else if (currentBg.includes('images/')) {
-                 // 로컬 환경에서 상대 경로를 명확히 해줌
-                 const imageName = currentBg.split('/').pop().replace('")', '');
-                 star.style.backgroundImage = `url('./images/${imageName}')`;
-            }
-        });
-
-
-        const canvas = await html2canvas(starContainer, {
-            backgroundColor: null,
-            useCORS: true,
-            // 로컬 테스트 시 CORS 오류를 피하기 위한 프록시 설정 (Vercel에서는 불필요)
-            // proxy: '/__proxy' 
-            // Vercel 환경에서는 동일 출처(Same-origin)이므로 프록시가 필요 없습니다.
-        });
-
-        const constellationImage = canvas.toDataURL('image/png');
-        
-        const resultCharms = Object.values(state.charms)
-            .filter(charm => charm.level > 0)
-            .sort((a, b) => b.level - a.level)
-            .map(charm => ({
-                name: charm.name,
-                level: charm.level,
-                color: charm.color
-            }));
-
-        const resultData = {
-            userName: userName,
-            constellationImage: constellationImage,
-            charms: resultCharms
-        };
-
-        localStorage.setItem('asterResultData', JSON.stringify(resultData));
-
-        window.location.href = 'result.html';
-
-    } catch (error) {
-        // [수정] 어떤 에러인지 콘솔에 자세히 출력
-        console.error('결과 카드 생성 중 오류 발생:', error);
-        alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
-        
-        // 버튼 원래 상태로 복구
-        createCardBtn.textContent = '결과 카드 만들기';
-        createCardBtn.disabled = false;
-    }
-}
-
-const createCardBtn = document.getElementById('createCardBtn');
-if (createCardBtn) {
-    createCardBtn.addEventListener('click', generateResultCard);
-}
