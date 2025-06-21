@@ -42,7 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 4. 오른쪽 카드 (매력 목록) 채우기 (복원) ---
     const charmListEl = document.getElementById('charmList');
     charmListEl.innerHTML = ''; // 기존 목록 초기화
-    charms.forEach(charm => {
+
+    // ▼▼▼ [핵심 수정] 상위 13개의 매력만 선택합니다. ▼▼▼
+    const topCharms = charms.slice(0, 13);
+
+        topCharms.forEach(charm => { // 이제 'charms' 대신 'topCharms'를 사용합니다.
         const listItem = document.createElement('li');
         listItem.className = 'charm-item';
 
@@ -52,6 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const levelDiv = document.createElement('div');
         levelDiv.className = 'charm-level';
+
+        // ▼▼▼ [핵심 수정] 매력별 고유 색상을 적용합니다. ▼▼▼
+        nameSpan.style.color = charm.color; // 매력 이름에 색상 적용
+        levelDiv.style.color = charm.color; // 별과 숫자에 색상 적용
+        // ▲▲▲ 여기까지 수정 ▲▲▲
 
         const starSpan = document.createElement('span');
         starSpan.className = 'star-icon';
