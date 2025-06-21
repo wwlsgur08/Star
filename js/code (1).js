@@ -117,9 +117,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ▼▼▼ [핵심 수정] 별자리 영역에 여백(padding)을 늘려 중앙으로 모읍니다. ▼▼▼
             // 기존 8%에서 18%로 여백을 늘려, 별들이 잘리지 않도록 합니다.
-            const padding = 12; 
-            let gridX = padding + (col * (100 - padding * 2) / (7 - 1));
-            let gridY = padding + (row * (100 - padding * 2) / (7 - 1));
+            const padding = 9;
+let gridX = padding + (col * (100 - padding * 2) / (7 - 1));
+let gridY = padding + (row * (100 - padding * 2) / (7 - 1));
+
+const centerX = 50;
+const centerY = 50;
+const radius = 50 - padding; // 안전 영역(원)의 반지름
+
+const dx = gridX - centerX;
+const dy = gridY - centerY;
+const distance = Math.sqrt(dx * dx + dy * dy);
+
+// 만약 별의 위치가 안전 영역(원)을 벗어났다면,
+if (distance > radius) {
+    // 안쪽으로 끌어당겨 위치를 재조정합니다.
+    const scale = radius / distance;
+    gridX = centerX + dx * scale;
+    gridY = centerY + dy * scale;
+}
             // ▲▲▲ 여기까지 수정 ▲▲▲
 
             const randomJitter = 4;
