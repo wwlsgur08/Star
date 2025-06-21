@@ -115,28 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = Math.floor(index / 7);
             const col = index % 7;
 
-            // ▼▼▼ [핵심 수정] 별자리 영역에 여백(padding)을 늘려 중앙으로 모읍니다. ▼▼▼
-            // 기존 8%에서 18%로 여백을 늘려, 별들이 잘리지 않도록 합니다.
             const padding = 9;
-let gridX = padding + (col * (100 - padding * 2) / (7 - 1));
-let gridY = padding + (row * (100 - padding * 2) / (7 - 1));
+            let gridX = padding + (col * (100 - padding * 2) / (7 - 1));
+            let gridY = padding + (row * (100 - padding * 2) / (7 - 1));
 
-const centerX = 50;
-const centerY = 50;
-const radius = 50 - padding; // 안전 영역(원)의 반지름
+            const centerX = 50;
+            const centerY = 50;
+            const radius = 50 - padding; 
 
-const dx = gridX - centerX;
-const dy = gridY - centerY;
-const distance = Math.sqrt(dx * dx + dy * dy);
+            const dx = gridX - centerX;
+            const dy = gridY - centerY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-// 만약 별의 위치가 안전 영역(원)을 벗어났다면,
-if (distance > radius) {
-    // 안쪽으로 끌어당겨 위치를 재조정합니다.
-    const scale = radius / distance;
-    gridX = centerX + dx * scale;
-    gridY = centerY + dy * scale;
-}
-            // ▲▲▲ 여기까지 수정 ▲▲▲
+            if (distance > radius) {
+                const scale = radius / distance;
+                gridX = centerX + dx * scale;
+                gridY = centerY + dy * scale;
+            }
 
             const randomJitter = 4;
             const offsetX = gridX + (Math.random() - 0.5) * randomJitter;
@@ -177,6 +172,7 @@ if (distance > radius) {
     function resetAll() {
         if (!confirm("정말 모든 선택을 초기화하고 처음(1단계)부터 다시 시작하시겠습니까?")) return;
         localStorage.removeItem('userSelectedCharms');
+        localStorage.removeItem('asterResultData');
         window.location.href = 'select.html';
     }
 
@@ -386,6 +382,12 @@ async function generateResultCard() {
         userNameInput.focus();
         return;
     }
+    
+    const investedCharms = Object.values(state.charms).filter(charm => charm.level > 0);
+    if (investedCharms.length === 0) {
+        alert('하나 이상의 매력에 별가루를 투자해야 카드를 만들 수 있습니다.');
+        return;
+    }
 
     const createCardBtn = document.getElementById('createCardBtn');
     createCardBtn.textContent = '생성 중...';
@@ -410,7 +412,8 @@ async function generateResultCard() {
             .map(charm => ({
                 name: charm.name,
                 level: charm.level,
-                color: charm.color
+                color: charm.color,
+                category: charm.category // ▼▼▼ [핵심 수정] 카테고리 정보 추가 ▼▼▼
             }));
 
         const resultData = {

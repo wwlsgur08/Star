@@ -8,17 +8,16 @@
       @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@500;700&display=swap');
 
 :root {
-    /* 시안의 색상으로 변수 정의 */
-    --color-text-main: #6366f1;       /* 로고, 이름 등 강조 텍스트 */
-    --color-text-secondary: #6b7280; /* 슬로건 등 보조 텍스트 */
-    --color-card-bg: #f3f4f6;         /* 카드 배경색 (기존과 동일) */
+    /* JS에 의해 동적으로 변경될 색상 변수들 */
+    --color-text-main: #6366f1;
+    --color-text-secondary: #6b7280;
+    --color-card-bg: #f3f4f6;
     --color-body-bg-start: #1f2937;
     --color-body-bg-end: #111827;
 }
 
 body {
     margin: 0;
-    /* 한글 폰트: Noto Serif KR */
     font-family: 'Noto Serif KR', serif;
     background: linear-gradient(135deg, var(--color-body-bg-start) 0%, var(--color-body-bg-end) 100%);
     display: flex;
@@ -27,6 +26,7 @@ body {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    transition: background 0.5s ease;
 }
 
 .card-container {
@@ -47,6 +47,7 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.5s ease;
 }
 
 /* 왼쪽 카드 (별자리) */
@@ -57,12 +58,12 @@ body {
 }
 
 .logo {
-    /* 영어 폰트: Playfair Display */
     font-family: 'Playfair Display', serif;
     font-size: 48px;
     font-weight: 500;
     color: var(--color-text-main);
     position: relative;
+    transition: color 0.5s ease;
 }
 .logo::after {
     content: '✦';
@@ -75,14 +76,15 @@ body {
 .slogan {
     color: var(--color-text-secondary);
     font-size: 14px;
-    /* 영어 슬로건을 위한 폰트 */
     font-family: 'Playfair Display', serif;
+    transition: color 0.5s ease;
 }
 
 .card-title {
     color: var(--color-text-secondary);
     font-size: 16px;
     margin-bottom: 30px;
+    transition: color 0.5s ease;
 }
 
 .constellation-wrapper {
@@ -110,11 +112,11 @@ body {
 }
 
 .user-name {
-    /* 영어 폰트: Playfair Display */
     font-family: 'Playfair Display', serif;
     font-size: 28px;
     color: var(--color-text-main);
     font-weight: 700;
+    transition: color 0.5s ease;
 }
 
 /* 오른쪽 카드 (매력 목록) */
@@ -139,16 +141,19 @@ body {
 
 .charm-name {
     font-weight: 700;
+    color: var(--color-text-secondary);
+    transition: color 0.5s ease;
 }
 
 .charm-level {
     display: flex;
     align-items: center;
     gap: 5px;
-    /* 영어/숫자 폰트: Playfair Display */
     font-family: 'Playfair Display', serif;
     font-weight: 700;
     font-size: 20px;
+    color: var(--color-text-main);
+    transition: color 0.5s ease;
 }
 
 .star-icon {
@@ -189,7 +194,7 @@ body {
                 <img id="constellationImage" class="constellation-image" src="" alt="나의 별자리">
             </div>
             <div>
-                <p id="userName" class="user-name">Jihyuk's</p>
+                <p id="userName" class="user-name">Your's</p>
                 <p class="slogan" style="margin-top: -5px;">Constellation</p>
             </div>
         </div>
