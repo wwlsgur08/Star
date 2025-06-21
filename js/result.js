@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const root = document.documentElement;
 
     // 카테고리별 테마 정보 (시안 기반)
-    const themeMap = {
-        "이해심 및 공감 능력":     { eye: "pink",    main: "#db2777", secondary: "#831843", bg: "#fce7f3", bodyStart: "#581c87", bodyEnd: "#3b0764" },
-        "성실성 및 책임감":         { eye: "skyblue", main: "#2563eb", secondary: "#1e3a8a", bg: "#dbeafe", bodyStart: "#1e3a8a", bodyEnd: "#1e1b4b" },
-        "지적 호기심 및 개방성":  { eye: "yellow",  main: "#d97706", secondary: "#78350f", bg: "#fef3c7", bodyStart: "#7c2d12", bodyEnd: "#451a03" },
-        "정서적 안정 및 자기 인식": { eye: "green",   main: "#16a34a", secondary: "#14532d", bg: "#dcfce7", bodyStart: "#064e3b", bodyEnd: "#062f23" },
-        "도덕성 및 양심":           { eye: "blue",    main: "#4f46e5", secondary: "#312e81", bg: "#e0e7ff", bodyStart: "#312e81", bodyEnd: "#1e1b4b" },
-        "유머감각 및 사교성":      { eye: "orange",  main: "#ea580c", secondary: "#7c2d12", bg: "#ffedd5", bodyStart: "#7f1d1d", bodyEnd: "#450a0a" },
-        "목표 지향성 및 야망":     { eye: "red",     main: "#dc2626", secondary: "#7f1d1d", bg: "#fee2e2", bodyStart: "#5f2120", bodyEnd: "#4c0519" }
+        const themeMap = {
+        "이해심 및 공감 능력":     { eye: "pink",    main: "#F64DC6", secondary: "#b0308f", bg: "#fdf2f8", bodyStart: "#86198f", bodyEnd: "#581c87" },
+        "성실성 및 책임감":         { eye: "skyblue", main: "#2DB6F6", secondary: "#0284c7", bg: "#f0f9ff", bodyStart: "#0369a1", bodyEnd: "#0c4a6e" },
+        "지적 호기심 및 개방성":  { eye: "yellow",  main: "#FBCA06", secondary: "#ca8a04", bg: "#fefce8", bodyStart: "#a16207", bodyEnd: "#713f12" },
+        "정서적 안정 및 자기 인식": { eye: "green",   main: "#2ABB53", secondary: "#16a34a", bg: "#f0fdf4", bodyStart: "#15803d", bodyEnd: "#14532d" },
+        "도덕성 및 양심":           { eye: "blue",    main: "#4D77F6", secondary: "#2563eb", bg: "#eef2ff", bodyStart: "#312e81", bodyEnd: "#1e1b4b" },
+        "유머감각 및 사교성":      { eye: "orange",  main: "#F68E4D", secondary: "#f97316", bg: "#fff7ed", bodyStart: "#c2410c", bodyEnd: "#7c2d12" },
+        "목표 지향성 및 야망":     { eye: "red",     main: "#F64D4D", secondary: "#ef4444", bg: "#fef2f2", bodyStart: "#b91c1c", bodyEnd: "#7f1d1d" }
     };
     
     // --- 1. 핵심 매력 카테고리를 찾아 테마 결정 ---

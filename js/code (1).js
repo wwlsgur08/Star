@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         startStar: null,
         lines: []
     };
-    const categoryInfo = {
-        "이해심 및 공감 능력": { color: "#F472B6", starImage: "star-pink.png" },
-        "성실성 및 책임감": { color: "#60A5FA", starImage: "star-skyblue.png" },
-        "지적 호기심 및 개방성": { color: "#FBBF24", starImage: "star-yellow.png" },
-        "정서적 안정 및 자기 인식": { color: "#4ADE80", starImage: "star-green.png" },
-        "도덕성 및 양심": { color: "#4F46E5", starImage: "star-blue.png" },
-        "유머감각 및 사교성": { color: "#F97316", starImage: "star-orange.png" },
-        "목표 지향성 및 야망": { color: "#EF4444", starImage: "star-red.png" }
+        const categoryInfo = {
+        "이해심 및 공감 능력": { color: "#F64DC6", starImage: "star-pink.png" },
+        "성실성 및 책임감": { color: "#2DB6F6", starImage: "star-skyblue.png" },
+        "지적 호기심 및 개방성": { color: "#FBCA06", starImage: "star-yellow.png" },
+        "정서적 안정 및 자기 인식": { color: "#2ABB53", starImage: "star-green.png" },
+        "도덕성 및 양심": { color: "#4D77F6", starImage: "star-blue.png" },
+        "유머감각 및 사교성": { color: "#F68E4D", starImage: "star-orange.png" },
+        "목표 지향성 및 야망": { color: "#F64D4D", starImage: "star-red.png" }
     };
     const categoryDataForPanel = [
         { name: "이해심 및 공감 능력", charms: ["다정함", "공감 능력", "이해심", "배려심", "경청 능력", "위로 능력", "섬세함"] },
