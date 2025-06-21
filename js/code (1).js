@@ -243,7 +243,7 @@ if (distance > radius) {
         undoLineBtn.disabled = state.lines.length === 0;
     }
     function getVisualSize(level) {
-    const sizeMap = { 0: 0, 1: 55, 2: 90, 3: 130, 4: 180, 5: 230, 6: 280 };
+     const sizeMap = { 0: 0, 1: 70, 2: 120, 3: 170, 4: 230, 5: 290, 6: 350 };
     return sizeMap[level] || 0;
 }
     function getClickableSize(level) {
