@@ -243,11 +243,11 @@ if (distance > radius) {
         undoLineBtn.disabled = state.lines.length === 0;
     }
     function getVisualSize(level) {
-     const sizeMap = { 0: 0, 1: 70, 2: 120, 3: 170, 4: 230, 5: 290, 6: 350 };
+    const sizeMap = { 0: 0, 1: 90, 2: 165, 3: 250, 4: 340, 5: 415, 6: 480 };
     return sizeMap[level] || 0;
 }
     function getClickableSize(level) {
-    const sizeMap = { 0: 0, 1: 40, 2: 60, 3: 70, 4: 80, 5: 90, 6: 100 };
+     const sizeMap = { 0: 0, 1: 60, 2: 80, 3: 90, 4: 100, 5: 110, 6: 120 };
     return sizeMap[level] || 0;
 }
     function updateStarAppearance(starEl, clickableEl, level, isHighlighted) {
