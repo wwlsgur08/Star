@@ -114,8 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const info = categoryInfo[charmCategory];
             const row = Math.floor(index / 7);
             const col = index % 7;
-            let gridX = 8 + (col * (100 - 8 * 2) / (7 - 1));
-            let gridY = 8 + (row * (100 - 8 * 2) / (7 - 1));
+
+            // ▼▼▼ [핵심 수정] 별자리 영역에 여백(padding)을 늘려 중앙으로 모읍니다. ▼▼▼
+            // 기존 8%에서 18%로 여백을 늘려, 별들이 잘리지 않도록 합니다.
+            const padding = 18; 
+            let gridX = padding + (col * (100 - padding * 2) / (7 - 1));
+            let gridY = padding + (row * (100 - padding * 2) / (7 - 1));
+            // ▲▲▲ 여기까지 수정 ▲▲▲
+
             const randomJitter = 4;
             const offsetX = gridX + (Math.random() - 0.5) * randomJitter;
             const offsetY = gridY + (Math.random() - 0.5) * randomJitter;
@@ -124,9 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
             starEl.style.left = `${offsetX}%`;
             starEl.style.top = `${offsetY}%`;
             
-            // ▼▼▼ [핵심 수정] 이미지 경로를 절대 경로로 변경 ▼▼▼
             starEl.style.backgroundImage = `url("/images/${info.starImage}")`;
-            // ▲▲▲ 이 슬래시(/) 하나가 모든 차이를 만듭니다 ▲▲▲
 
             const clickableArea = document.createElement('div');
             clickableArea.className = 'star-clickable-area';
@@ -148,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resetAllBtn.addEventListener('click', resetAll);
         replayOnboardingBtn.addEventListener('click', startOnboarding);
 
-        // [이동] init 함수 안에서 addEventListeners로 이동
         const createCardBtn = document.getElementById('createCardBtn');
         if (createCardBtn) {
             createCardBtn.addEventListener('click', generateResultCard);
@@ -161,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'select.html';
     }
 
-    // --- 이하 로직은 크게 변경 없습니다 ---
     function handleLevelButtonClick(charmName, newLevel) {
         const charm = state.charms[charmName];
         if (charm.level === newLevel) return;
@@ -289,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 온보딩 함수들 (변경 없음) ---
     let onboardingElements = {};
     let onboardingSteps = [];
     let currentOnboardingStep = 0;
@@ -359,7 +360,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // [신규] 결과 카드 생성 함수 (수정)
 async function generateResultCard() {
     const starContainer = document.getElementById('starContainer');
     const userNameInput = document.getElementById('userNameInput');
@@ -375,10 +375,8 @@ async function generateResultCard() {
     createCardBtn.textContent = '생성 중...';
     createCardBtn.disabled = true;
 
-    // ▼▼▼ [핵심 수정] 캡처 전에 배경을 강제로 투명하게 만듭니다 ▼▼▼
     const originalBackground = starContainer.style.background;
     starContainer.style.background = 'transparent'; 
-    // ▲▲▲ 여기까지 ▲▲▲
 
     try {
         const canvas = await html2canvas(starContainer, {
@@ -386,9 +384,7 @@ async function generateResultCard() {
             useCORS: true, 
         });
         
-        // ▼▼▼ [핵심 수정] 캡처가 끝나면 원래 배경으로 되돌립니다 ▼▼▼
         starContainer.style.background = originalBackground;
-        // ▲▲▲ 여기까지 ▲▲▲
 
         const constellationImage = canvas.toDataURL('image/png');
         
@@ -411,9 +407,7 @@ async function generateResultCard() {
         window.location.href = 'result.html';
 
     } catch (error) {
-        // ▼▼▼ [핵심 수정] 에러가 발생해도 원래 배경으로 되돌립니다 ▼▼▼
         starContainer.style.background = originalBackground;
-        // ▲▲▲ 여기까지 ▲▲▲
 
         console.error('결과 카드 생성 중 오류 발생:', error);
         alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
