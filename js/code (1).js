@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMobile = window.innerWidth <= 768;
         const updateUI = () => {
             const rect = targetElement.getBoundingClientRect();
-            const padding = 10;
+            const padding = 14;
             onboardingElements.highlight.style.width = `${rect.width + padding * 2}px`;
             onboardingElements.highlight.style.height = `${rect.height + padding * 2}px`;
             onboardingElements.highlight.style.top = `${rect.top - padding}px`;
