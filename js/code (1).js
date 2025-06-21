@@ -243,13 +243,13 @@ if (distance > radius) {
         undoLineBtn.disabled = state.lines.length === 0;
     }
     function getVisualSize(level) {
-        const sizeMap = { 0: 0, 1: 50, 2: 80, 3: 120, 4: 170, 5: 220, 6: 280 };
-        return sizeMap[level] || 0;
-    }
+    const sizeMap = { 0: 0, 1: 55, 2: 90, 3: 130, 4: 180, 5: 230, 6: 280 };
+    return sizeMap[level] || 0;
+}
     function getClickableSize(level) {
-        const sizeMap = { 0: 0, 1: 40, 2: 60, 3: 70, 4: 80, 5: 90, 6: 100 };
-        return sizeMap[level] || 0;
-    }
+    const sizeMap = { 0: 0, 1: 40, 2: 60, 3: 70, 4: 80, 5: 90, 6: 100 };
+    return sizeMap[level] || 0;
+}
     function updateStarAppearance(starEl, clickableEl, level, isHighlighted) {
         const visualSize = getVisualSize(level);
         const clickableSize = getClickableSize(level);
