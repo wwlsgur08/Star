@@ -40,11 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 결정된 색상에 맞는 눈동자 이미지 경로를 설정합니다.
     eyeBackgroundEl.src = `images/eye-${eyeColor}.png`;
     
-    // ★★ 핵심: 배경 이미지에 필터를 적용하여 톤을 다운시킵니다. ★★
-    // 밝기를 60%로, 채도를 80%로 조절하여 별이 더 잘 보이게 합니다.
-    eyeBackgroundEl.style.filter = 'brightness(60%) saturate(80%)';
-
-
+   
     // --- 3. 오른쪽 카드 (매력 목록) 채우기 ---
     const charmListEl = document.getElementById('charmList');
     charms.forEach(charm => {
