@@ -66,14 +66,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 5. QR 코드 생성 (복원) ---
-    const qrcodeContainer = document.getElementById('qrcode');
-    qrcodeContainer.innerHTML = ''; // 기존 QR 코드 초기화
-    new QRCode(qrcodeContainer, {
-        text: window.location.href,
-        width: 80,
-        height: 80,
-        colorDark : theme.main,      // QR코드 색상을 동적으로 변경
-        colorLight : theme.bg,       // 배경색을 카드 배경과 동일하게
-        correctLevel : QRCode.CorrectLevel.H
-    });
+  
 });
