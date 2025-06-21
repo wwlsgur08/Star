@@ -5,178 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Aster: 나의 별자리 카드</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Montserrat:wght@500;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@500;700&display=swap');
 
-        :root {
-            /* 색상 변수 정의 */
-            --color-red: #EF4444;
-            --color-pink: #F472B6;
-            --color-skyblue: #60A5FA;
-            --color-green: #4ADE80;
-            --color-yellow: #FBBF24;
-            --color-blue: #4F46E5;
-            --color-orange: #F97316;
-        }
+:root {
+    /* 시안의 색상으로 변수 정의 */
+    --color-text-main: #6366f1;       /* 로고, 이름 등 강조 텍스트 */
+    --color-text-secondary: #6b7280; /* 슬로건 등 보조 텍스트 */
+    --color-card-bg: #f3f4f6;         /* 카드 배경색 (기존과 동일) */
+    --color-body-bg-start: #1f2937;
+    --color-body-bg-end: #111827;
+}
 
-        body {
-            margin: 0;
-            font-family: 'Gowun Dodum', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+body {
+    margin: 0;
+    /* 한글 폰트: Noto Serif KR */
+    font-family: 'Noto Serif KR', serif;
+    background: linear-gradient(135deg, var(--color-body-bg-start) 0%, var(--color-body-bg-end) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
-        .card-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-        }
+.card-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
 
-        .card {
-            width: 320px;
-            height: 540px;
-            background-color: #f3f4f6;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            padding: 25px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
+.card {
+    width: 320px;
+    height: 540px;
+    background-color: var(--color-card-bg);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    padding: 25px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
 
-        /* 왼쪽 카드 (별자리) */
-        .card.front {
-            justify-content: space-between;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 48px;
-            font-weight: 500;
-            color: #6366f1;
-            position: relative;
-        }
-        .logo::after {
-            content: '✦';
-            font-size: 16px;
-            position: absolute;
-            top: 5px;
-            right: -15px;
-        }
+/* 왼쪽 카드 (별자리) */
+.card.front {
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
 
-        .slogan {
-            font-family: 'Montserrat', sans-serif;
-            color: #6b7280;
-            font-size: 14px;
-        }
+.logo {
+    /* 영어 폰트: Playfair Display */
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--color-text-main);
+    position: relative;
+}
+.logo::after {
+    content: '✦';
+    font-size: 16px;
+    position: absolute;
+    top: 5px;
+    right: -15px;
+}
 
-        .constellation-wrapper {
-            width: 270px;
-            height: 270px;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* ▼▼▼ [핵심 수정] 하단 그림자를 유발하는 box-shadow 속성을 제거했습니다. ▼▼▼ */
-            /* box-shadow: 0 0 20px rgba(255,255,255,0.1); */
-        }
+.slogan {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    /* 영어 슬로건을 위한 폰트 */
+    font-family: 'Playfair Display', serif;
+}
 
-        .eye-background {
-            position: absolute;
-            width: 140%;
-            height: 140%;
-            object-fit: cover;
-            /* JS에서 필터를 적용할 부분 */
-        }
-        
-        .constellation-image {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
+.card-title {
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
 
-        .user-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 28px;
-            color: #6366f1;
-            font-weight: 700;
-        }
+.constellation-wrapper {
+    width: 270px;
+    height: 270px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        /* 오른쪽 카드 (매력 목록) */
-        .card.back {
-            text-align: center;
-        }
-        
-        .card-title {
-            color: #6b7280;
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
+.eye-background {
+    position: absolute;
+    width: 140%;
+    height: 140%;
+    object-fit: cover;
+}
 
-        .charm-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
+.constellation-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
 
-        .charm-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
-            margin-bottom: 18px;
-        }
-        
-        .charm-name {
-            font-weight: 700;
-        }
+.user-name {
+    /* 영어 폰트: Playfair Display */
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--color-text-main);
+    font-weight: 700;
+}
 
-        .charm-level {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 20px;
-        }
+/* 오른쪽 카드 (매력 목록) */
+.card.back {
+    text-align: center;
+}
 
-        .star-icon {
-            font-size: 18px;
-            line-height: 1;
-        }
+.charm-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
 
-        #qrcode {
-            width: 80px !important; /* 라이브러리 스타일 덮어쓰기 */
-            height: 80px !important;
-            margin: 20px auto 0;
-        }
+.charm-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
 
-        /* 모바일 반응형 */
-        @media (max-width: 767px) {
-            body {
-                padding: 10px;
-            }
-            .card-container {
-                gap: 10px;
-            }
-            .card {
-                width: 100%;
-                max-width: 350px;
-                height: auto;
-                min-height: 520px;
-            }
-        }
+.charm-name {
+    font-weight: 700;
+}
+
+.charm-level {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    /* 영어/숫자 폰트: Playfair Display */
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.star-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+#qrcode {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 20px auto 0;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 767px) {
+    body { padding: 10px; }
+    .card-container { gap: 10px; }
+    .card {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        min-height: 520px;
+    }
+}
     </style>
 </head>
 <body>
