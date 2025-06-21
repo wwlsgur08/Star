@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
     root.style.setProperty('--color-body-bg-start', theme.bodyStart);
     root.style.setProperty('--color-body-bg-end', theme.bodyEnd);
     document.getElementById('eyeBackground').src = `images/eye-${theme.eye}.png`;
-
+document.getElementById('logo-front').src = `images/logo-${theme.eye}.png`;
+    document.getElementById('logo-back').src = `images/logo-${theme.eye}.png`;
     // --- 3. 왼쪽 카드 내용 채우기 ---
     document.getElementById('userName').textContent = `${userName}'s`;
     document.getElementById('constellationImage').src = constellationImage;
