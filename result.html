@@ -135,12 +135,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 18px;
-    margin-bottom: 12px;
+    font-size: 15px;      /* 1. 글자 크기: 18px -> 15px로 줄임 */
+    margin-bottom: 10px;  /* 3. 행간: 12px -> 10px로 줄여 더 촘촘하게 */
 }
 
 .charm-name {
-    font-weight: 500;
+    font-weight: 400;     /* (추가) 이름 굵기를 보통으로 변경 */
     color: var(--color-text-secondary);
     transition: color 0.5s ease;
 }
@@ -148,16 +148,14 @@ body {
 .charm-level {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;             /* (추가) 별과 숫자 사이 간격 살짝 줄임 */
     font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--color-text-main);
-    transition: color 0.5s ease;
+    font-weight: 500;     /* (추가) 레벨 굵기를 중간으로 변경 */
+    font-size: 16px;      /* 1. 숫자 크기: 20px -> 16px로 줄임 */
 }
 
 .star-icon {
-    font-size: 18px;
+    font-size: 14px;      /* 2. 별 크기: 18px -> 14px로 줄임 */
     line-height: 1;
 }
 
