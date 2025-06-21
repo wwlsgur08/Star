@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ▼▼▼ [핵심 수정] 별자리 영역에 여백(padding)을 늘려 중앙으로 모읍니다. ▼▼▼
             // 기존 8%에서 18%로 여백을 늘려, 별들이 잘리지 않도록 합니다.
-            const padding = 18; 
+            const padding = 10; 
             let gridX = padding + (col * (100 - padding * 2) / (7 - 1));
             let gridY = padding + (row * (100 - padding * 2) / (7 - 1));
             // ▲▲▲ 여기까지 수정 ▲▲▲
@@ -227,13 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
         undoLineBtn.disabled = state.lines.length === 0;
     }
     function getVisualSize(level) {
-        const sizeMap = { 0: 0, 1: 50, 2: 80, 3: 120, 4: 170, 5: 220, 6: 280 };
-        return sizeMap[level] || 0;
-    }
+    const sizeMap = { 0: 0, 1: 45, 2: 75, 3: 110, 4: 160, 5: 210, 6: 260 };
+    return sizeMap[level] || 0;
+}
     function getClickableSize(level) {
-        const sizeMap = { 0: 0, 1: 40, 2: 60, 3: 70, 4: 80, 5: 90, 6: 100 };
-        return sizeMap[level] || 0;
-    }
+    const sizeMap = { 0: 0, 1: 35, 2: 55, 3: 70, 4: 80, 5: 90, 6: 100 };
+    return sizeMap[level] || 0;
+}
     function updateStarAppearance(starEl, clickableEl, level, isHighlighted) {
         const visualSize = getVisualSize(level);
         const clickableSize = getClickableSize(level);
