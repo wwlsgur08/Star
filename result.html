@@ -79,8 +79,8 @@ body {
 }
 
 .constellation-wrapper {
-    width: 270px;
-    height: 270px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
@@ -160,13 +160,53 @@ body {
 /* 모바일 반응형 */
 @media (max-width: 767px) {
     body { padding: 10px; }
-    .card-container { gap: 10px; }
-    .card {
+    .card-container {
+        gap: 10px;
+        /* ▼▼▼ [수정] flex-wrap을 nowrap으로 변경해 한 줄로 강제 ▼▼▼ */
+        flex-wrap: nowrap;
         width: 100%;
-        max-width: 350px;
-        height: auto;
-        min-height: 520px;
+        overflow-x: auto; /* 좌우 스크롤이 가능하도록 설정 */
+        -webkit-overflow-scrolling: touch; /* 부드러운 스크롤 효과 */
+        justify-content: flex-start; /* 왼쪽부터 정렬 */
+        padding-bottom: 10px; /* 스크롤바를 위한 약간의 여백 */
     }
+    .card {
+        /* ▼▼▼ [수정] width를 고정 값으로 변경하여 크기 유지 ▼▼▼ */
+        width: 300px;
+        flex-shrink: 0; /* 카드가 찌그러지지 않도록 설정 */
+        height: 500px; /* 높이도 고정값으로 변경 */
+        max-width: none;
+        min-height: auto;
+    }
+}
+
+.share-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+#share-btn {
+    background-color: var(--color-text-main);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#share-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+#share-btn:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
 }
     </style>
 </head>
