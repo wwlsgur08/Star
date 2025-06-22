@@ -75,6 +75,55 @@ document.getElementById('logo-front').src = `images/logo-${theme.eye}.png`;
         charmListEl.appendChild(listItem);
     });
 
-    // --- 5. QR 코드 생성 (복원) ---
+      // --- 6. [신규] 공유 기능 구현 ---
+    const shareBtn = document.getElementById('share-btn');
+    if(shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            shareBtn.disabled = true;
+            shareBtn.textContent = '이미지 생성 중...';
+
+            try {
+                // 공유할 영역을 선택 (카드 두장을 감싸는 컨테이너)
+                const cardContainer = document.querySelector('.card-container');
+                const canvas = await html2canvas(cardContainer, {
+                    backgroundColor: null, // 배경을 투명하게 캡처
+                    useCORS: true
+                });
+
+                // 캔버스를 파일 형태로 변환
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                const file = new File([blob], 'aster-result.png', { type: 'image/png' });
+                
+                // 공유할 데이터 준비
+                const shareData = {
+                    title: 'Aster: 나의 별자리 카드',
+                    text: '나만의 별자리를 만들고, 내 안의 매력을 발견해보세요!',
+                    url: `${window.location.origin}/select.html`, // 서비스 첫 페이지 주소
+                    files: [file]
+                };
+
+                // Web Share API를 지원하는지 확인 (주로 모바일)
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: shareData.files })) {
+                    await navigator.share(shareData);
+                    shareBtn.textContent = '공유 완료!';
+                } else {
+                    // PC 등 API 미지원 환경에서는 링크 복사 기능으로 대체
+                    navigator.clipboard.writeText(shareData.url);
+                    alert('결과 페이지 링크가 복사되었습니다. 친구에게 공유해보세요!');
+                    shareBtn.textContent = '링크 복사 완료!';
+                }
+
+            } catch (error) {
+                console.error('공유 기능 오류:', error);
+                alert('공유에 실패했습니다. 다시 시도해주세요.');
+            } finally {
+                // 2초 후 버튼을 원래 상태로 복구
+                setTimeout(() => {
+                    shareBtn.disabled = false;
+                    shareBtn.textContent = '결과 공유하기 📲';
+                }, 2000);
+            }
+        });
+    }
   
 });
