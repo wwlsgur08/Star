@@ -238,23 +238,49 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateUndoButtonState() {
         undoLineBtn.disabled = state.lines.length === 0;
     }
-    function getVisualSize(level) {
-    const sizeMap = { 0: 0, 1: 90, 2: 165, 3: 250, 4: 340, 5: 415, 6: 480 };
-    return sizeMap[level] || 0;
+    function getVisualSize(level, isMobile) {
+    // isMobile일 경우 vw 단위, 아닐 경우 px 단위 사용
+    const unit = isMobile ? 'vw' : 'px';
+    const sizeMap = {
+        0: 0,
+        1: isMobile ? 12 : 90,
+        2: isMobile ? 22 : 165,
+        3: isMobile ? 33 : 250,
+        4: isMobile ? 45 : 340,
+        5: isMobile ? 55 : 415,
+        6: isMobile ? 64 : 480
+    };
+    return (sizeMap[level] || 0) + unit;
 }
-    function getClickableSize(level) {
-     const sizeMap = { 0: 0, 1: 60, 2: 80, 3: 90, 4: 100, 5: 110, 6: 120 };
-    return sizeMap[level] || 0;
+
+function getClickableSize(level, isMobile) {
+    const unit = isMobile ? 'vw' : 'px';
+    const sizeMap = {
+        0: 0,
+        1: isMobile ? 8 : 60,
+        2: isMobile ? 11 : 80,
+        3: isMobile ? 12 : 90,
+        4: isMobile ? 13 : 100,
+        5: isMobile ? 14 : 110,
+        6: isMobile ? 15 : 120
+    };
+    return (sizeMap[level] || 0) + unit;
 }
-    function updateStarAppearance(starEl, clickableEl, level, isHighlighted) {
-        const visualSize = getVisualSize(level);
-        const clickableSize = getClickableSize(level);
-        starEl.style.width = `${visualSize}px`;
-        starEl.style.height = `${visualSize}px`;
-        clickableEl.style.width = `${clickableSize}px`;
-        clickableEl.style.height = `${clickableSize}px`;
-        starEl.style.transform = 'translate(-50%, -50%)';
-    }
+
+function updateStarAppearance(starEl, clickableEl, level, isHighlighted) {
+    // 모바일 여부 확인 (768px 기준)
+    const isMobile = window.innerWidth <= 768;
+
+    const visualSize = getVisualSize(level, isMobile);
+    const clickableSize = getClickableSize(level, isMobile);
+    
+    starEl.style.width = visualSize;
+    starEl.style.height = visualSize;
+    clickableEl.style.width = clickableSize;
+    clickableEl.style.height = clickableSize;
+
+    starEl.style.transform = 'translate(-50%, -50%)';
+}
     function updateDisplay() {
         remainingStardustEl.textContent = state.remainingStardust;
         document.querySelectorAll('.charm-item').forEach(item => {

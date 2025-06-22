@@ -189,21 +189,27 @@ body {
     padding: 20px;
 }
 
+/* ▼▼▼ [수정] 모바일 반응형 스타일 ▼▼▼ */
 @media (max-width: 767px) {
-    body { padding: 10px; }
+    body {
+        padding: 20px 10px; /* 상하 패딩 늘림 */
+        justify-content: flex-start; /* 위에서부터 정렬 */
+    }
     
     .card-container {
-        /* ▼▼▼ [수정] 모바일에서 카드 크기 조정 ▼▼▼ */
-        width: 100%;
-        transform: scale(0.55);
-        transform-origin: top center;
+        flex-direction: column; /* 카드를 세로로 쌓음 */
         gap: 15px;
-        flex-wrap: wrap;
-        margin: -110px 0; /* 상하 마진으로 위치 조정 */
+        /* 이전에 적용했던 transform, margin 모두 제거 */
+    }
+
+    .card {
+        width: 100%; /* 화면 너비에 맞춤 */
+        max-width: 350px; /* 최대 너비 제한 */
+        height: auto; /* 내용에 따라 높이 자동 조절 */
     }
 
     .share-container {
-        margin-top: 0;
+        margin-top: 25px; /* 카드와 공유 버튼 사이 간격 */
     }
 }
     </style>
