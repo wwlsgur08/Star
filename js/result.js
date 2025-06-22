@@ -60,54 +60,78 @@ document.addEventListener('DOMContentLoaded', () => {
         charmListEl.appendChild(listItem);
     });
 
-    // --- [핵심 수정] 공유 기능 로직 변경 ---
+    // --- 공통 캡처 함수 ---
+    async function captureCard(button, processingText) {
+        button.disabled = true;
+        button.textContent = processingText;
+
+        const captureTarget = document.getElementById('capture-target');
+        const visibleContainer = document.getElementById('visible-card-container');
+        captureTarget.querySelector('.card-container').innerHTML = visibleContainer.innerHTML;
+
+        try {
+            const canvas = await html2canvas(captureTarget.querySelector('.card-container'), {
+                backgroundColor: null,
+                useCORS: true
+            });
+            return canvas;
+        } catch (error) {
+            console.error('캡처 오류:', error);
+            alert('이미지 생성에 실패했습니다. 다시 시도해주세요.');
+            return null;
+        }
+    }
+
+    // --- 공유 기능 ---
     const shareBtn = document.getElementById('share-btn');
     if(shareBtn) {
         shareBtn.addEventListener('click', async () => {
-            shareBtn.disabled = true;
-            shareBtn.textContent = '이미지 생성 중...';
-
-            const captureTarget = document.getElementById('capture-target');
-            const visibleContainer = document.getElementById('visible-card-container');
-            
-            // 1. 보이는 카드를 보이지 않는 캡처 영역으로 복제
-            captureTarget.querySelector('.card-container').innerHTML = visibleContainer.innerHTML;
-
-            try {
-                // 2. 이제 보이지 않는 영역을 캡처 (원본 크기)
-                const canvas = await html2canvas(captureTarget.querySelector('.card-container'), {
-                    backgroundColor: null,
-                    useCORS: true
-                });
-
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                const file = new File([blob], 'aster-result.png', { type: 'image/png' });
-                
-                const shareData = {
-                    title: 'Aster: 나의 별자리 카드',
-                    text: '나만의 별자리를 만들고, 내 안의 매력을 발견해보세요!',
-                    url: `${window.location.origin}/select.html`,
-                    files: [file]
-                };
-
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: shareData.files })) {
-                    await navigator.share(shareData);
-                    shareBtn.textContent = '공유 완료!';
-                } else {
-                    navigator.clipboard.writeText(shareData.url);
-                    alert('결과 페이지 링크가 복사되었습니다. 친구에게 공유해보세요!');
-                    shareBtn.textContent = '링크 복사 완료!';
-                }
-
-            } catch (error) {
-                console.error('공유 기능 오류:', error);
-                alert('공유에 실패했습니다. 다시 시도해주세요.');
-            } finally {
-                setTimeout(() => {
-                    shareBtn.disabled = false;
-                    shareBtn.textContent = '결과 공유하기 📲';
-                }, 2000);
+            const canvas = await captureCard(shareBtn, '공유 파일 생성 중...');
+            if (!canvas) {
+                shareBtn.disabled = false;
+                shareBtn.textContent = '결과 공유하기 📲';
+                return;
             }
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            const file = new File([blob], 'aster-result.png', { type: 'image/png' });
+            
+            const shareData = {
+                title: 'Aster: 나의 별자리 카드',
+                text: '나만의 별자리를 만들고, 내 안의 매력을 발견해보세요!',
+                url: window.location.origin, // 서비스 주소
+                files: [file]
+            };
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: shareData.files })) {
+                await navigator.share(shareData);
+            } else {
+                navigator.clipboard.writeText(shareData.url);
+                alert('결과 페이지 링크가 복사되었습니다. 친구에게 공유해보세요!');
+            }
+            shareBtn.disabled = false;
+            shareBtn.textContent = '결과 공유하기 📲';
+        });
+    }
+
+    // --- 저장 기능 ---
+    const saveBtn = document.getElementById('save-btn');
+    if(saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+            const canvas = await captureCard(saveBtn, '이미지 저장 중...');
+            if (!canvas) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '이미지로 저장하기 📥';
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.download = 'My_Aster_Card.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            saveBtn.disabled = false;
+            saveBtn.textContent = '이미지로 저장하기 📥';
         });
     }
 });

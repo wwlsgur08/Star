@@ -24,7 +24,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 20px 0; /* 좌우 패딩을 0으로 변경 */
     box-sizing: border-box;
     transition: background 0.5s ease;
 }
@@ -32,9 +32,11 @@ body {
 .card-container {
     display: flex;
     gap: 20px;
-    flex-wrap: wrap;
+    /* ▼▼▼ [수정] PC에서는 중앙 정렬, 모바일에서는 좌측 정렬되도록 변경 ▼▼▼ */
     justify-content: center;
     align-items: center;
+    width: 100%;
+    max-width: 100%;
 }
 
 .card {
@@ -48,6 +50,8 @@ body {
     display: flex;
     flex-direction: column;
     transition: background-color 0.5s ease;
+    /* ▼▼▼ [수정] 카드가 찌그러지지 않도록 flex-shrink 추가 ▼▼▼ */
+    flex-shrink: 0;
 }
 
 .card.front {
@@ -151,14 +155,18 @@ body {
     line-height: 1;
 }
 
-.share-container {
-    text-align: center;
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
     margin-top: 25px;
+    width: 100%;
+    max-width: 320px;
 }
 
-#share-btn {
-    background-color: var(--color-text-main);
-    color: white;
+.action-btn {
+    width: 100%;
     border: none;
     padding: 12px 25px;
     border-radius: 10px;
@@ -169,54 +177,49 @@ body {
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-
-#share-btn:hover:not(:disabled) {
+.action-btn.primary {
+    background-color: var(--color-text-main);
+    color: white;
+}
+.action-btn.secondary {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+.action-btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
-
-#share-btn:disabled {
+.action-btn:disabled {
     background-color: #a0aec0;
     cursor: not-allowed;
 }
 
-/* ▼▼▼ [핵심 수정] 캡처 전용 숨겨진 영역 스타일 ▼▼▼ */
 #capture-target {
     position: absolute;
-    left: -9999px; /* 화면 밖으로 완전히 밀어냄 */
+    left: -9999px;
     top: -9999px;
     background-color: transparent;
     padding: 20px;
 }
 
-/* ▼▼▼ [수정] 모바일 반응형 스타일 ▼▼▼ */
+/* ▼▼▼ [핵심 수정] 모바일 반응형 스타일 ▼▼▼ */
 @media (max-width: 767px) {
-    body {
-        padding: 20px 10px; /* 상하 패딩 늘림 */
-        justify-content: flex-start; /* 위에서부터 정렬 */
-    }
-    
     .card-container {
-        flex-direction: column; /* 카드를 세로로 쌓음 */
-        gap: 15px;
-        /* 이전에 적용했던 transform, margin 모두 제거 */
+        overflow-x: auto; /* 좌우 스크롤 활성화 */
+        justify-content: flex-start; /* 왼쪽부터 정렬 */
+        padding: 0 20px; /* 좌우 여백을 주어 힌트 생성 */
+        /* 스크롤바 숨기기 */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
-
-    .card {
-        width: 100%; /* 화면 너비에 맞춤 */
-        max-width: 350px; /* 최대 너비 제한 */
-        height: auto; /* 내용에 따라 높이 자동 조절 */
-    }
-
-    .share-container {
-        margin-top: 25px; /* 카드와 공유 버튼 사이 간격 */
+    .card-container::-webkit-scrollbar {
+        display: none;
     }
 }
     </style>
 </head>
 <body>
     
-    <!-- ▼▼▼ [핵심 추가] 캡처를 위한 보이지 않는 영역 ▼▼▼ -->
     <div id="capture-target">
         <div class="card-container">
             <!-- JS가 이 안에 캡처용 카드를 복제해서 넣을 예정 -->
@@ -250,8 +253,10 @@ body {
         </div>
     </div>
     
-    <div class="share-container">
-        <button id="share-btn">결과 공유하기 📲</button>
+    <!-- ▼▼▼ [수정] 버튼들을 감싸는 컨테이너로 변경 ▼▼▼ -->
+    <div class="action-buttons">
+        <button id="share-btn" class="action-btn primary">결과 공유하기 📲</button>
+        <button id="save-btn" class="action-btn secondary">이미지로 저장하기 📥</button>
     </div>
     
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>

@@ -419,6 +419,32 @@ async function generateResultCard() {
     createCardBtn.textContent = '생성 중...';
     createCardBtn.disabled = true;
 
+    const originalStarStyles = [];
+    Object.values(state.charms).forEach(charm => {
+        if (charm.level > 0) {
+            const visualSize = getVisualSize(charm.level, false); // false = PC용 px 단위
+            const clickableSize = getClickableSize(charm.level, false); // false = PC용 px 단위
+            
+            // 원래 스타일 저장
+            originalStarStyles.push({
+                element: charm.element,
+                width: charm.element.style.width,
+                height: charm.element.style.height
+            });
+            originalStarStyles.push({
+                element: charm.clickableElement,
+                width: charm.clickableElement.style.width,
+                height: charm.clickableElement.style.height
+            });
+
+            // px 단위로 강제 변환
+            charm.element.style.width = visualSize;
+            charm.element.style.height = visualSize;
+            charm.clickableElement.style.width = clickableSize;
+            charm.clickableElement.style.height = clickableSize;
+        }
+    });
+
     const originalBackground = starContainer.style.background;
     starContainer.style.background = 'transparent'; 
 
@@ -458,6 +484,15 @@ async function generateResultCard() {
         alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
         createCardBtn.textContent = '결과 카드 만들기';
         createCardBtn.disabled = false;
+    }
+    finally {
+        // ▼▼▼ [핵심 추가] 캡처 후, 별 크기를 원래 스타일로 복원 ▼▼▼
+        starContainer.style.background = originalBackground;
+        originalStarStyles.forEach(style => {
+            style.element.style.width = style.width;
+            style.element.style.height = style.height;
+        });
+        // ▲▲▲ 여기까지 추가 ▲▲▲
     }
 }
 
