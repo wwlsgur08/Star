@@ -8,7 +8,6 @@
       @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Playfair+Display:wght@500;700&display=swap');
 
 :root {
-    /* JS에 의해 동적으로 변경될 색상 변수들 */
     --color-text-main: #6366f1;
     --color-text-secondary: #6b7280;
     --color-card-bg: #f3f4f6;
@@ -21,6 +20,7 @@ body {
     font-family: 'Noto Serif KR', serif;
     background: linear-gradient(135deg, var(--color-body-bg-start) 0%, var(--color-body-bg-end) 100%);
     display: flex;
+    flex-direction: column; 
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -43,23 +43,21 @@ body {
     background-color: var(--color-card-bg);
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    padding: 25px 55px;
+    padding: 25px 25px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     transition: background-color 0.5s ease;
 }
 
-/* 왼쪽 카드 (별자리) */
 .card.front {
     justify-content: space-between;
     align-items: center;
     text-align: center;
 }
 
-/* ▼▼▼ [수정] 로고 스타일: 텍스트 -> 이미지용으로 변경 ▼▼▼ */
 .logo {
-    height: 42px; /* 로고 이미지의 높이를 지정합니다. (값 조절 가능) */
+    height: 42px;
     width: auto;
     object-fit: contain;
 }
@@ -110,7 +108,6 @@ body {
     transition: color 0.5s ease;
 }
 
-/* 오른쪽 카드 (매력 목록) */
 .card.back {
     text-align: center;
 }
@@ -120,27 +117,24 @@ body {
     padding: 0;
     margin: 0;
     flex-grow: 1;
-    overflow-y: auto; /* 목록이 길어지면 스크롤되도록 추가 */
-    -ms-overflow-style: none; /* IE, Edge */
-    scrollbar-width: none; /* Firefox */
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 .charm-list::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
 }
-
 
 .charm-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 15px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .charm-name {
     font-weight: 400;
-    color: var(--color-text-secondary);
-    transition: color 0.5s ease;
 }
 
 .charm-level {
@@ -155,29 +149,6 @@ body {
 .star-icon {
     font-size: 14px;
     line-height: 1;
-}
-
-/* 모바일 반응형 */
-@media (max-width: 767px) {
-    body { padding: 10px; }
-    .card-container {
-        gap: 10px;
-        /* ▼▼▼ [수정] flex-wrap을 nowrap으로 변경해 한 줄로 강제 ▼▼▼ */
-        flex-wrap: nowrap;
-        width: 100%;
-        overflow-x: auto; /* 좌우 스크롤이 가능하도록 설정 */
-        -webkit-overflow-scrolling: touch; /* 부드러운 스크롤 효과 */
-        justify-content: flex-start; /* 왼쪽부터 정렬 */
-        padding-bottom: 10px; /* 스크롤바를 위한 약간의 여백 */
-    }
-    .card {
-        /* ▼▼▼ [수정] width를 고정 값으로 변경하여 크기 유지 ▼▼▼ */
-        width: 300px;
-        flex-shrink: 0; /* 카드가 찌그러지지 않도록 설정 */
-        height: 500px; /* 높이도 고정값으로 변경 */
-        max-width: none;
-        min-height: auto;
-    }
 }
 
 .share-container {
@@ -208,17 +179,50 @@ body {
     background-color: #a0aec0;
     cursor: not-allowed;
 }
+
+/* ▼▼▼ [핵심 수정] 캡처 전용 숨겨진 영역 스타일 ▼▼▼ */
+#capture-target {
+    position: absolute;
+    left: -9999px; /* 화면 밖으로 완전히 밀어냄 */
+    top: -9999px;
+    background-color: transparent;
+    padding: 20px;
+}
+
+@media (max-width: 767px) {
+    body { padding: 10px; }
+    
+    .card-container {
+        /* ▼▼▼ [수정] 모바일에서 카드 크기 조정 ▼▼▼ */
+        width: 100%;
+        transform: scale(0.55);
+        transform-origin: top center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin: -110px 0; /* 상하 마진으로 위치 조정 */
+    }
+
+    .share-container {
+        margin-top: 0;
+    }
+}
     </style>
 </head>
 <body>
+    
+    <!-- ▼▼▼ [핵심 추가] 캡처를 위한 보이지 않는 영역 ▼▼▼ -->
+    <div id="capture-target">
+        <div class="card-container">
+            <!-- JS가 이 안에 캡처용 카드를 복제해서 넣을 예정 -->
+        </div>
+    </div>
 
-    <div class="card-container">
-        <!-- 왼쪽 카드 -->
+    <!-- 화면에 보이는 카드 영역 -->
+    <div class="card-container" id="visible-card-container">
         <div class="card front">
             <div>
-                <!-- ▼▼▼ [수정] div -> img 태그로 변경 ▼▼▼ -->
                 <img id="logo-front" class="logo" src="" alt="Aster 로고">
-                <p class="slogan">Finally, Uncover My Inner Star</p>
+                <p class="slogan">Lighting up the stars within</p>
             </div>
             <div class="constellation-wrapper">
                 <img id="eyeBackground" class="eye-background" src="" alt="눈동자 우주 배경">
@@ -226,17 +230,13 @@ body {
             </div>
             <div>
                 <p id="userName" class="user-name">Your's</p>
-                <!-- ▼▼▼ [수정] Constellation 글자 크기 조정 ▼▼▼ -->
-               <p class="slogan" style="margin-top: -5px; font-size: 24px;">Constellation</p>
+               <p class="slogan" style="margin-top: -5px; font-size: 18px;">Constellation</p>
             </div>
         </div>
-
-        <!-- 오른쪽 카드 -->
         <div class="card back">
             <div>
-                <!-- ▼▼▼ [수정] div -> img 태그로 변경 ▼▼▼ -->
                 <img id="logo-back" class="logo" src="" alt="Aster 로고">
-                <p class="card-title">마침내 발견한 내 안의 별</p>
+                <p class="card-title">내 안의 별을 밝히는 여정</p>
             </div>
             <ul id="charmList" class="charm-list">
                 <!-- JS로 채워질 매력 목록 -->
@@ -248,9 +248,7 @@ body {
         <button id="share-btn">결과 공유하기 📲</button>
     </div>
     
-    <!-- ▼▼▼ [신규] html2canvas 라이브러리 추가 ▼▼▼ -->
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <!-- 결과 페이지 로직을 담을 JS 파일 -->
     <script src="js/result.js"></script>
 
 </body>
