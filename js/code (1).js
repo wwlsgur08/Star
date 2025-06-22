@@ -419,31 +419,41 @@ async function generateResultCard() {
     createCardBtn.textContent = '생성 중...';
     createCardBtn.disabled = true;
 
+    // --- ▼▼▼ [핵심 수정] 캡처 전 스타일 변환 로직 ▼▼▼ ---
     const originalStarStyles = [];
+    const originalLineStyles = [];
+    const starContainerRect = starContainer.getBoundingClientRect();
+
+    // 1. 별 크기를 px로 변환
     Object.values(state.charms).forEach(charm => {
         if (charm.level > 0) {
-            const visualSize = getVisualSize(charm.level, false); // false = PC용 px 단위
-            const clickableSize = getClickableSize(charm.level, false); // false = PC용 px 단위
-            
-            // 원래 스타일 저장
-            originalStarStyles.push({
-                element: charm.element,
-                width: charm.element.style.width,
-                height: charm.element.style.height
-            });
-            originalStarStyles.push({
-                element: charm.clickableElement,
-                width: charm.clickableElement.style.width,
-                height: charm.clickableElement.style.height
-            });
-
-            // px 단위로 강제 변환
+            const visualSize = getVisualSize(charm.level, false);
+            const clickableSize = getClickableSize(charm.level, false);
+            originalStarStyles.push({ element: charm.element, width: charm.element.style.width, height: charm.element.style.height });
+            originalStarStyles.push({ element: charm.clickableElement, width: charm.clickableElement.style.width, height: charm.clickableElement.style.height });
             charm.element.style.width = visualSize;
             charm.element.style.height = visualSize;
             charm.clickableElement.style.width = clickableSize;
             charm.clickableElement.style.height = clickableSize;
         }
     });
+
+    // 2. 선 좌표를 %에서 px로 변환
+    state.lines.forEach(lineInfo => {
+        const lineEl = lineInfo.element;
+        const x1 = parseFloat(lineEl.getAttribute('x1'));
+        const y1 = parseFloat(lineEl.getAttribute('y1'));
+        const x2 = parseFloat(lineEl.getAttribute('x2'));
+        const y2 = parseFloat(lineEl.getAttribute('y2'));
+
+        originalLineStyles.push({ element: lineEl, x1: `${x1}%`, y1: `${y1}%`, x2: `${x2}%`, y2: `${y2}%` });
+
+        lineEl.setAttribute('x1', (x1 / 100) * starContainerRect.width);
+        lineEl.setAttribute('y1', (y1 / 100) * starContainerRect.height);
+        lineEl.setAttribute('x2', (x2 / 100) * starContainerRect.width);
+        lineEl.setAttribute('y2', (y2 / 100) * starContainerRect.height);
+    });
+    // --- ▲▲▲ 여기까지 수정 ▲▲▲ ---
 
     const originalBackground = starContainer.style.background;
     starContainer.style.background = 'transparent'; 
@@ -454,45 +464,40 @@ async function generateResultCard() {
             useCORS: true, 
         });
         
-        starContainer.style.background = originalBackground;
-
         const constellationImage = canvas.toDataURL('image/png');
         
         const resultCharms = Object.values(state.charms)
             .filter(charm => charm.level > 0)
             .sort((a, b) => b.level - a.level)
-            .map(charm => ({
-                name: charm.name,
-                level: charm.level,
-                color: charm.color,
-                category: charm.category // ▼▼▼ [핵심 수정] 카테고리 정보 추가 ▼▼▼
-            }));
+            .map(charm => ({ name: charm.name, level: charm.level, color: charm.color, category: charm.category }));
 
-        const resultData = {
-            userName: userName,
-            constellationImage: constellationImage,
-            charms: resultCharms
-        };
+        const resultData = { userName: userName, constellationImage: constellationImage, charms: resultCharms };
 
         localStorage.setItem('asterResultData', JSON.stringify(resultData));
         window.location.href = 'result.html';
 
     } catch (error) {
-        starContainer.style.background = originalBackground;
-
         console.error('결과 카드 생성 중 오류 발생:', error);
         alert('오류가 발생하여 결과 카드를 생성할 수 없습니다. 다시 시도해주세요.');
         createCardBtn.textContent = '결과 카드 만들기';
         createCardBtn.disabled = false;
-    }
-    finally {
-        // ▼▼▼ [핵심 추가] 캡처 후, 별 크기를 원래 스타일로 복원 ▼▼▼
+    } finally {
+        // --- ▼▼▼ [핵심 수정] 캡처 후 스타일 복원 로직 ▼▼▼ ---
         starContainer.style.background = originalBackground;
+        
+        // 1. 별 스타일 복원
         originalStarStyles.forEach(style => {
             style.element.style.width = style.width;
             style.element.style.height = style.height;
         });
-        // ▲▲▲ 여기까지 추가 ▲▲▲
+        // 2. 선 스타일 복원
+        originalLineStyles.forEach(style => {
+            style.element.setAttribute('x1', style.x1);
+            style.element.setAttribute('y1', style.y1);
+            style.element.setAttribute('x2', style.x2);
+            style.element.setAttribute('y2', style.y2);
+        });
+        // --- ▲▲▲ 여기까지 수정 ▲▲▲ ---
     }
 }
 

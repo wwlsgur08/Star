@@ -67,10 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const captureTarget = document.getElementById('capture-target');
         const visibleContainer = document.getElementById('visible-card-container');
-        captureTarget.querySelector('.card-container').innerHTML = visibleContainer.innerHTML;
+        const captureElement = captureTarget.querySelector('.card-container');
+        
+        captureElement.innerHTML = visibleContainer.innerHTML;
+
+        // ▼▼▼ [핵심 수정] 캡처 전 너비를 고정하고, 끝난 후 복원 ▼▼▼
+        captureElement.style.width = '660px'; // 카드 2장(320*2) + 간격(20)
 
         try {
-            const canvas = await html2canvas(captureTarget.querySelector('.card-container'), {
+            const canvas = await html2canvas(captureElement, {
                 backgroundColor: null,
                 useCORS: true
             });
@@ -79,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('캡처 오류:', error);
             alert('이미지 생성에 실패했습니다. 다시 시도해주세요.');
             return null;
+        } finally {
+            captureElement.style.width = ''; // 너비 고정 해제
         }
     }
 
